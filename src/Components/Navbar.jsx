@@ -1,5 +1,6 @@
 import Logo from "../assets/Logo.png";
 import CalenderVector from "../assets/CalenderVector.png";
+import { Link } from "react-router-dom";
 function Sidebar() {
   return (
     <header className="w-full bg-transparent flex justify-between items-center px-4 py-4">
@@ -18,15 +19,12 @@ function Sidebar() {
       </nav>
 
       <div>
-        <a
-          href="#login"
-          className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm flex items-center"
-        >
-          <span className="mr-2">
+        <Link to="/login" className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm flex items-center" >
+        <span className="mr-2">
             <img src={CalenderVector} alt="CalenderVector" />
           </span>
           Login to your portal
-        </a>
+        </Link> 
       </div>
       </div>
     </header>

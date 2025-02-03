@@ -1,4 +1,3 @@
-import React from "react";
 import HomeHeader from "../../assets/HomeHeader.png";
 import CalenderVector from "../../assets/CalenderVector.png";
 import Navbar from "../../Components/Navbar";
