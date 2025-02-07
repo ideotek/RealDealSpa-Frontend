@@ -1,7 +1,6 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import backgroundImage from "../assets/BackgroundImage.png";
-import Sidebar from "../Components/Navbar";
 import TextField from "../Components/resuableFields/textField";
 import SelectField from "../Components/resuableFields/selectField";  
 import PhoneInput from "../Components/resuableFields/phoneField";  
@@ -61,18 +60,17 @@ const SignupPage = () => {
 
   return (
     <div
-      className="w-screen h-screen bg-cover bg-center"
+      className="min-h-screen w-full bg-cover bg-center py-5 px-2 sm:px-4"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <Sidebar />
-      <div>
-        <h1 className="text-2xl py-5 font-bold text-center">Welcome You</h1>
-        <p className="text-sm text-center text-gray-600">
-          Create your own account
-        </p>
-      </div>
-      <div className="flex items-center justify-center mt-10">
-        <div className="w-full max-w-5xl bg-white rounded-lg shadow-lg p-8">
+      <div className="max-w-6xl mx-auto flex justify-center items-center">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-4 sm:p-8">
+          <div className="text-center mb-6 sm:mb-10">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Welcome to our portal</h1>
+            <p className="text-gray-600 text-base sm:text-lg">
+              Create your own account
+            </p>
+          </div>
           <Formik
             initialValues={{
               firstName: "",
@@ -96,31 +94,35 @@ const SignupPage = () => {
           >
             {({ errors, touched, handleChange, handleBlur, setFieldValue, values }) => (
               <Form>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
                   {formFields.map(({ label, placeholder, type, name, options, required }) => (
                     <div key={label} className="flex flex-col">
-                      <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700">
+                      <label 
+                        htmlFor={name} 
+                        className="mb-1 sm:mb-2 text-sm font-medium text-gray-700"
+                      >
                         {label} {required && <span className="text-red-500">*</span>}
                       </label>
+                      
                       {type === "select" ? (
-                       <SelectField
-                       name={name}
-                       options={options}  
-                       value={values[name]}
-                       onChange={handleChange}
-                       onBlur={handleBlur}
-                       error={touched[name] && errors[name] ? errors[name] : null}
-                       placeholder={placeholder || `Select ${label}`}
-                       required={required}
-                     />
-                        
+                        <SelectField
+                          name={name}
+                          options={options}  
+                          value={values[name]}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={touched[name] && errors[name] ? errors[name] : null}
+                          placeholder={placeholder || `Select ${label}`}
+                          required={required}
+                          className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                        />
                       ) : name === "phone" ? (
                         <PhoneInput
                           international
                           countryCallingCodeEditable={false}
                           value={values.phone}
                           onChange={(value) => setFieldValue("phone", value)}
-                          className="w-full p-2 border rounded-md"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                         />
                       ) : (
                         <TextField
@@ -129,18 +131,21 @@ const SignupPage = () => {
                           name={name}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          className="w-full p-2 border rounded-md"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                           error={touched[name] && errors[name] ? errors[name] : null}
                         />
+                      )}
+                      {touched[name] && errors[name] && (
+                        <p className="mt-1 text-sm text-red-500">{errors[name]}</p>
                       )}
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-10">
+                <div className="mt-6 sm:mt-8">
                   <button
                     type="submit"
-                    className="w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+                    className="w-full py-2.5 sm:py-3 px-4 text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors duration-200 font-medium text-sm"
                   >
                     SIGNUP
                   </button>
@@ -149,9 +154,9 @@ const SignupPage = () => {
             )}
           </Formik>
 
-          <p className="mt-6 text-sm text-center">
+          <p className="mt-4 sm:mt-6 text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-red-500">
+            <a href="/login" className="text-red-500 hover:text-red-600 font-medium">
               Login Here!
             </a>
           </p>

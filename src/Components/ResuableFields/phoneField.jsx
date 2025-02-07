@@ -12,7 +12,7 @@ const PhoneField = ({ icon, value, onChange, error, touched }) => {
           value={value}
           onChange={onChange}
           defaultCountry="US"
-          className={`flex-grow bg-transparent text-gray-600 placeholder-gray-400 focus:ring-none focus:outline-none ${
+          className={`flex-grow bg-transparent text-gray-600 placeholder-gray-400 focus:ring-none focus:outline-none [&>*]:bg-transparent ${
             error && touched ? "border-red-500" : ""
           }`}
         />

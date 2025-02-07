@@ -4,27 +4,46 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
-import Sidebar from "./Components/Navbar";
+import PrivateRoute from "./Auth/PrivateRoute";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Navbar from "./Components/Navbar";
 import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
+
 import Home from "./Pages/Home";
-import PrivateRoute from "./Auth/PrivateRoute";
+import ServicePage from "./Pages/ServicePage";
 
 const Layout = () => {
   return (
-    <>
-      <Sidebar />
-      <Outlet />
-    </>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
+    </div>
   );
 };
 
 const App = () => {
   return (
     <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-        <Route path="home" element={<div>testHome</div>}/>
+        <Route path="/services" element={<ServicePage />} />
 
         </Route>
         <Route index element={<Home />} />

@@ -1,12 +1,12 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import backgroundImage from "../assets/BackgroundImage.png";
-import Sidebar from "../Components/Navbar";
 import TextField from "../Components/resuableFields/textField";
 import commonAxios from "../utils/commonAxios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
- 
 const LoginPage = () => { 
   const navigate = useNavigate()
   const formFields = [
@@ -32,18 +32,19 @@ const LoginPage = () => {
         localStorage.setItem("AccessToken", token);
         localStorage.setItem("customerDetails", JSON.stringify(customer)); 
         localStorage.setItem("currentLocation", JSON.stringify(currentLocation)); 
-        navigate("/home", { replace: true });
+        toast.success("Login successful!");
+        navigate("/", { replace: true });
       }
     } catch (error) {
       if (error.response) {
         const { status, message } = error.response.data; 
         if (status === 403) {
-          alert(`Login failed: ${message}`);
+          toast.error(`Login failed: ${message}`);
         } else {
-          alert(`Error: ${message}`);
+          toast.error(`Error: ${message}`);
         }
       } else {
-        alert("An unexpected error occurred. Please try again later.");
+        toast.error("An unexpected error occurred. Please try again later.");
       }
     }
   };
@@ -54,8 +55,7 @@ const LoginPage = () => {
       className="w-screen h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <Sidebar />
-      <div className="flex items-center justify-center mt-10">
+      <div className="flex items-center justify-center w-full h-full">
         <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-2xl font-bold text-center">Welcome Back</h1>
           <p className="text-sm text-center text-gray-600">
@@ -101,10 +101,10 @@ const LoginPage = () => {
           </Formik>
 
           <p className="mt-6 text-sm text-center">
-            Don’t have an account?{" "}
-            <a href="/signup" className="text-red-500">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-red-500 hover:text-red-600 font-medium">
               Sign up!
-            </a>
+            </Link>
           </p>
         </div>
       </div>
