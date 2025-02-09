@@ -1,43 +1,9 @@
-import { useEffect, useState } from "react";
-import commonAxios from "../../utils/commonAxios";
+import { useState } from "react";
 import Loader from '../Common/Loader';
+import useFetchServices from '../../hooks/useFetchServices'; // Import the custom hook
 
 const ServicesSection = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        // Get locationID from localStorage
-        const currentLocation = JSON.parse(localStorage.getItem("currentLocation"));
-        if (!currentLocation?.locationID) {
-          throw new Error("Location not found");
-        }
-
-        const response = await commonAxios.get(`/services?locationID=${currentLocation.locationID}`);
-        
-
-        if (response.data.status === 200) {
-          console.log("Setting services with:", response.data.data);
-          setServices(response?.data?.data?.services);
-          console.log(services);
-        }
-      } catch (err) {
-        const errorMessage = err.message === "Location not found" 
-          ? "Please select a location first"
-          : err.response?.data?.message || "Failed to fetch services";
-        
-        setError(errorMessage);
-        console.error("Error fetching services:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchServices();
-  }, []);
+  const { services, loading, error } = useFetchServices(); // Call the custom hook
 
   if (loading) {
     return (
@@ -55,7 +21,6 @@ const ServicesSection = () => {
     );
   }
 
-  
   return (
     <div className="py-12">
       <div className="text-center mb-12">
@@ -73,9 +38,9 @@ const ServicesSection = () => {
             <div
               key={service.calendarId || index}
               className={`flex flex-col items-center text-center p-6 rounded-lg transition-all duration-300 bg-white text-gray-800 hover:bg-red-500 hover:text-white shadow-md`}
-              >
-            <div className="rounded-full flex items-center justify-center mb-4">
-            <img 
+            >
+              <div className="rounded-full flex items-center justify-center mb-4">
+                <img 
                   src={service.imageUrl?.mainImageUrl} 
                   alt={service.name} 
                   className="w-10 h-10 object-cover rounded-full"
@@ -88,7 +53,6 @@ const ServicesSection = () => {
               <p className="text-sm mt-2 line-clamp-3 overflow-hidden">
                 {service.shortDescription || service.description}
               </p>
-             
             </div>
           ))}
         </div>
