@@ -17,7 +17,6 @@ const PhoneField = ({ icon, value, onChange, error, touched }) => {
           }`}
         />
       </div>
-      {error && touched && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 };
