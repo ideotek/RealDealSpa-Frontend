@@ -10,10 +10,7 @@ const DropdownField = ({
   placeholder,
   required,
   error,
-  touched,
 }) => { 
- 
-
   const handleChange = (e) => {
     onChange(e);
   };
@@ -23,22 +20,22 @@ const DropdownField = ({
       <label className="block text-gray-700 text-sm font-semibold uppercase mb-1">
         {label} 
       </label>
-      <div className="flex items-center   bg-gray-100 p-2 rounded-lg shadow-sm w-full">
+      <div className="flex items-center bg-gray-100 p-2 rounded-lg shadow-sm w-full">
         <select
           name={name}
           value={value}
           onChange={handleChange} 
-          className={`w-full bg-transparent text-gray-600 placeholder-gray-400 focus:outline-none ${error && touched ? "border-red-500" : "border-gray-300"} p-2 rounded-lg`}
+          className={`w-full bg-transparent text-gray-600 placeholder-gray-400 focus:outline-none ${error ? "border-red-500" : "border-gray-300"} p-2 rounded-lg`}
         >
           <option value="" disabled>{placeholder || "Select an option"}</option>
-          {options.map((option) => (
+          {options?.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
       </div>
-      {error && touched && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

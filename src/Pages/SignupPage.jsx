@@ -6,9 +6,13 @@ import SelectField from "../Components/resuableFields/selectField";
 import PhoneInput from "../Components/resuableFields/phoneField";  
 import 'react-phone-number-input/style.css';  
 import { countries, timezones } from "../utils/data";
- 
+import { useEffect, useState } from "react";
+import commonAxios from "../utils/commonAxios";
+import { useNavigate } from 'react-router-dom';
+import { showToast } from '../utils/toast';
 
 const formFields = [
+  { label: "Location", placeholder: "Select Location", type: "select", name: "locationID", required: true,options:[] },
   { label: "First Name", placeholder: "Enter your First Name", type: "text", name: "firstName", required: true },
   { label: "Last Name", placeholder: "Enter your Last Name", type: "text", name: "lastName", required: true },
   { label: "Email", placeholder: "Enter your email", type: "email", name: "email", required: true },
@@ -27,14 +31,39 @@ const formFields = [
 ];
 
 const SignupPage = () => {
+  const [dynamicFormFields, setDynamicFormFields] = useState(formFields);
+  const [initialLocationId, setInitialLocationId] = useState("");
+  const navigate = useNavigate();
   
-  // Validation schema using Yup
+  useEffect(() => {
+    commonAxios.get("/locations").then((res) => {
+      const locationOptions = res?.data?.data?.map(location => ({
+        value: location.locationID,
+        label: location.name,
+        data: location
+      }));
+      if (locationOptions?.length > 0) {
+        setInitialLocationId(locationOptions[0]);
+      }
+
+      setDynamicFormFields(prevFields => 
+        prevFields.map(field => 
+          field.name === "locationID" 
+            ? { ...field, options: locationOptions }
+            : field
+        )
+      );
+    }).catch(error => {
+      console.error("Error fetching locations:", error);
+    });
+  }, []);
+
   const validationSchema = Yup.object({
     firstName: Yup.string()
-      .min(3, "First Name must be at least 3 characters")
+      .min(2, "First Name must be at least 2 characters")
       .required("First Name is required"),
     lastName: Yup.string()
-      .min(3, "Last Name must be at least 3 characters")
+      .min(1, "Last Name must be at least 1 characters")
       .required("Last Name is required"),
     email: Yup.string()
       .email("Invalid email address")
@@ -53,9 +82,37 @@ const SignupPage = () => {
     timezone: Yup.string().required("Timezone is required"),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Form data", values);
-    // Handle form submission logic here
+  const handleSubmit = async (values) => {
+    try {
+      const response = await commonAxios.post("/customer/register", {
+        locationID: values.locationID,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        phone: values.phone,
+        city: values.city,
+        state: values.state,
+        gender: values.gender,
+        postalCode: values.postalCode,
+        address: values.address,
+        dateOfBirth: values.dateOfBirth,
+        country: values.country,
+        timezone: values.timezone,
+        password: values.password,
+        referralCode: values.referralCode
+      });
+
+      if (response.data) {
+        showToast.success("Registration successful! Redirecting to login...");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+      showToast.error(errorMessage);
+      console.error("Registration failed:", error.response?.data || error.message);
+    }
   };
 
   return (
@@ -73,6 +130,7 @@ const SignupPage = () => {
           </div>
           <Formik
             initialValues={{
+              locationID: initialLocationId?.value,
               firstName: "",
               lastName: "",
               email: "",
@@ -85,17 +143,18 @@ const SignupPage = () => {
               postalCode: "",
               address: "",
               dateOfBirth: "",
-              country: "",
-              timezone: "",
+              country: initialLocationId?.data?.address?.country?.code,
+              timezone: initialLocationId?.data?.timezone,
               referralCode: "",
             }}
+            enableReinitialize={true}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
             {({ errors, touched, handleChange, handleBlur, setFieldValue, values }) => (
               <Form>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
-                  {formFields.map(({ label, placeholder, type, name, options, required }) => (
+                  {dynamicFormFields.map(({ label, placeholder, type, name, options, required }) => (
                     <div key={label} className="flex flex-col">
                       <label 
                         htmlFor={name} 
