@@ -36,7 +36,7 @@ const ServicesSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4">
           {services.map((service, index) => (
             <div
-              key={service.calendarId || index}
+              key={service._id || index}
               className={`flex flex-col items-center text-center p-6 rounded-lg transition-all duration-300 bg-white text-gray-800 hover:bg-red-500 hover:text-white shadow-md`}
             >
               <div className="rounded-full flex items-center justify-center mb-4">

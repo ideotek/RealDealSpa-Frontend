@@ -32,7 +32,7 @@ export const setLoadingStateHandler = (handler) => {
 // Handle request interceptor
 commonAxios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("AccessToken");
     if (token) config.headers["Authorization"] = `Bearer ${token}`;
     if (loadingStateHandler) loadingStateHandler(true);
     return config;
@@ -53,7 +53,7 @@ commonAxios.interceptors.response.use(
     if (loadingStateHandler) loadingStateHandler(false);
     
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("AccessToken");
       Swal.fire({
         icon: "error",
         title: "Session Expired",
