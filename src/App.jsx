@@ -62,6 +62,7 @@ const App = () => (
           <Route path="/services/:serviceID" element={<ServiceDetail />} />
         </Route>
       </Routes>
+      
       <LoadingContext.Consumer>
         {({ loading }) => loading && <Loader />}
       </LoadingContext.Consumer>
