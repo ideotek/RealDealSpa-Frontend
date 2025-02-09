@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import commonAxios from "../../utils/commonAxios";
+import Loader from '../Common/Loader';
 
 const ServicesSection = () => {
   const [services, setServices] = useState([]);
@@ -41,7 +42,7 @@ const ServicesSection = () => {
   if (loading) {
     return (
       <div className="py-12 text-center">
-        <p>Loading services...</p>
+        <Loader />
       </div>
     );
   }
