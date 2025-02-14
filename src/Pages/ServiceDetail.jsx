@@ -12,19 +12,19 @@ const ServiceDetail = () => {
     const navigate = useNavigate();
  
 
-    useEffect(() => {
-        const fetchServiceData = async () => {
-            try {
-                const response = await commonAxios.get(`/services/${serviceID}`);
-                console.log(response.data.data,"responses");
-                setServiceData(response.data.data);
-            } catch (error) {
-                console.error('Fetch error:', error);
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+  useEffect(() => {
+    const fetchServiceData = async () => {
+      try {
+        const response = await commonAxios.get(`/services/${serviceID}`);
+        console.log(response.data.data, "responses");
+        setServiceData(response.data.data);
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
         fetchServiceData();
     }, [serviceID]);

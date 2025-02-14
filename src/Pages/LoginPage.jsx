@@ -1,21 +1,26 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import backgroundImage from "../assets/BackgroundImage.png";
-import TextField from "../Components/resuableFields/textField";
-import commonAxios from "../utils/commonAxios";
+import TextField from "../Components/Common/ResuableFields/TextField";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Loader from '../Components/Common/Loader';
-import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 
-const LoginPage = () => { 
-  const navigate = useNavigate()
+const LoginPage = () => {
+  const navigate = useNavigate();
   const [loading, handleSubmit] = useLogin(navigate);
   const formFields = [
-    { label: "Email", placeholder: "Enter your email", type: "email", name: "email" },
-    { label: "Password", placeholder: "Enter your password", type: "password", name: "password" },
+    {
+      label: "Email",
+      placeholder: "Enter your email",
+      type: "email",
+      name: "email",
+    },
+    {
+      label: "Password",
+      placeholder: "Enter your password",
+      type: "password",
+      name: "password",
+    },
   ];
 
   const validationSchema = Yup.object({
@@ -37,53 +42,57 @@ const LoginPage = () => {
           <h1 className="text-2xl font-bold text-center">Welcome Back</h1>
           <p className="text-sm text-center text-gray-600">
             Login into your account
-          </p> 
+          </p>
 
-          <div className="relative my-6 text-center"> 
-          </div>
-
-          {loading ? (
-            <Loader />
-          ) : (
-            <Formik
-              initialValues={{ email: "", password: "" }}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
-            >
-              {({ errors, touched, handleChange, handleBlur, setTouched }) => (
-                <Form>
-                  <div className="space-y-4">
-                    {formFields.map(({ label, placeholder, type, name }) => (
-                      <TextField
-                        key={label}
-                        label={label}
-                        placeholder={placeholder}
-                        type={type}
-                        name={name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className="w-full"
-                        touched={setTouched}
-                        error={touched[name] && errors[name] ? errors[name] : null}
-                      />
-                    ))}
-                  </div> 
-                  <div className="mt-10">
-                    <button
-                      type="submit"
-                      className="w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
-                    >
-                      LOGIN
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          )}
+          <div className="relative my-6 text-center"></div>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ errors, touched, handleChange, handleBlur, setTouched }) => (
+              <Form>
+                <div className="space-y-4">
+                  {formFields.map(({ label, placeholder, type, name }) => (
+                    <TextField
+                      key={label}
+                      label={label}
+                      placeholder={placeholder}
+                      type={type}
+                      name={name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="w-full"
+                      touched={setTouched}
+                      error={
+                        touched[name] && errors[name] ? errors[name] : null
+                      }
+                    />
+                  ))}
+                </div>
+                <div className="mt-10">
+                  <button
+                    type="submit"
+                    className="w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 flex items-center justify-center"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      "LOGIN"
+                    )}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
 
           <p className="mt-6 text-sm text-center">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-red-500 hover:text-red-600 font-medium">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-red-500 hover:text-red-600 font-medium"
+            >
               Sign up!
             </Link>
           </p>

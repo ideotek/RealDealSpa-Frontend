@@ -18,6 +18,7 @@ export const useLogin = (navigate) => {
         navigate("/", { replace: true });
       }
     } catch (error) {
+      toast.error("An error occurred during login.");
       if (error.response) {
         const { status, message } = error.response.data; 
         if (status === 403) {

@@ -17,7 +17,6 @@ const TextField = ({icon, type, name, value, onChange, placeholder, error, touch
           error && touched ? "border-red-500" : Class
         }`} 
       />
-      {error && touched && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 };
