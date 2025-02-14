@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { memo } from "react";
+import { memo } from "react"; 
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const CalendarIcon = () => (
   <svg
@@ -19,50 +20,55 @@ const CalendarIcon = () => (
   </svg>
 );
 
-const Card = memo(({ title, schedule, shortDescription, image, id }) => {
-  const serviceUrl = `/services/${id}`;
-  console.log(serviceUrl);
+const Card = memo(
+  ({ title, schedule, shortDescription, image, id, onClick, price, expiration, features, paymentLink }) => {
+    const serviceUrl = `/services/${id}`;
 
-  return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      {/* Image section */}
-      <div className="w-full h-48 relative">
-        <img
-          src={image?.mainImageUrl}
-          alt={title}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute bottom-4 right-4 bg-orange-400 p-2 rounded-full cursor-pointer">
-          <CalendarIcon />
-        </div>
-      </div>
-
-      {/* Content section */}
-      <div className="p-6">
-        <h3 className="text-2xl font-bold text-gray-800 mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4">
-          Duration: {schedule?.duration}
-          {schedule?.durationType}
-        </p>
-
-        {/* Description and price row */}
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <p className="text-gray-600 line-clamp-2">{shortDescription}</p>
+    return (
+      <div
+        className="card transition-transform duration-300 ease-in-out transform hover:scale-105"
+        onClick={onClick}
+      >
+        {/* Image section */}
+        <Link to={serviceUrl}>
+          <div className="w-full h-48 relative">
+            <img
+              src={image}
+              alt={title}
+              className="w-full h-full object-cover rounded-t"
+              loading="lazy"
+            />
+            <div className="absolute bottom-4 right-4 bg-orange-400 p-2 rounded-full cursor-pointer">
+              <CalendarIcon />
+            </div>
           </div>
-        </div>
+        </Link>
+        {/* Content section */}
+        <div className="p-6 rounded-b border-x border-b border-gray-200">
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">{title}</h3>
+          <p className="text-gray-600 mb-4">
+            Price: ${price} <br />
+            Duration: {expiration.value} {expiration.expirationType}
+          </p>
+          <p className="text-gray-600 mb-4">{shortDescription}</p>
 
-        {/* View More link */}
-        <div>
-          <a href={serviceUrl} className="text-xs text-red-700">
-            View More
-          </a>
+          {/* Features list */}
+          <div className="mb-4">
+            <h4 className="font-semibold">Features:</h4>
+            <ul className="list-disc list-inside">
+              {features.map((feature, index) => (
+                <li key={index} className="text-gray-600">{feature}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Payment link */}
+          <a href={paymentLink} className="text-xs text-red-700">Purchase Now</a>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 Card.propTypes = {
   title: PropTypes.string.isRequired,
@@ -71,11 +77,16 @@ Card.propTypes = {
     duration: PropTypes.string,
   }),
   shortDescription: PropTypes.string,
-  price: PropTypes.number,
-  image: PropTypes.shape({
-    mainImageUrl: PropTypes.string,
-    otherImageUrls: PropTypes.array,
-  }),
+  price: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  expiration: PropTypes.shape({
+    value: PropTypes.number.isRequired,
+    expirationType: PropTypes.string.isRequired,
+  }).isRequired,
+  features: PropTypes.arrayOf(PropTypes.string).isRequired,
+  paymentLink: PropTypes.string.isRequired,
 };
 
 Card.displayName = "Card";

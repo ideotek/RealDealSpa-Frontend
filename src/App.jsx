@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Outlet,
+  useLocation,
 } from "react-router-dom";
 import PrivateRoute from "./Auth/PrivateRoute";
 import { ToastContainer } from "react-toastify";
@@ -18,14 +19,18 @@ import Home from "./Pages/Home";
 import ServicePage from "./Pages/ServicePage"
 import ServiceDetail from "./Pages/ServiceDetail";
 
-const Layout = () => (
-  <div className="app-layout">
-    <Navbar />
-    <main>
-      <Outlet />
-    </main>
-  </div>
-);
+const Layout = () => {
+  const location = useLocation();
+
+  return (
+    <div className="app-layout">
+      <Navbar />
+      <main className={location.pathname === '/' ? '' : 'mt-[5rem]'}>
+        <Outlet />
+      </main>
+    </div>
+  );
+};
 
 const TOAST_CONFIG = {
   position: "top-right",

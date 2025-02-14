@@ -10,6 +10,7 @@ export const useServices = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
+        // Get locationID from localStorage
         const currentLocation = JSON.parse(
           localStorage.getItem("currentLocation")
         );
@@ -22,27 +23,18 @@ export const useServices = () => {
         );
 
         if (response.data.status === 200) {
-          const transformedServices = response.data.data.services.map(
-            (service) => ({
-              id: service._id,
-              title: service.name,
-              schedule: service.duration,
-              shortDescription: service.shortDescription,
-              price: service.pricing,
-              image: service.imageUrl,
-            })
-          );
-          setServices(transformedServices);
+          setServices(response?.data?.data?.services);
         }
       } catch (err) {
         const errorMessage =
           err.message === "Location not found"
             ? "Please select a location first"
-            : err.response?.data?.message || "Failed to fetch services, please try again later";
+            : err.response?.data?.message ||
+              "Failed to fetch services, please try again later";
 
         setError(errorMessage);
-        console.error("Error fetching services:", err);
         toast.error(errorMessage);
+        console.error("Error fetching services:", err);
       } finally {
         setLoading(false);
       }
@@ -53,3 +45,4 @@ export const useServices = () => {
 
   return { services, loading, error };
 };
+

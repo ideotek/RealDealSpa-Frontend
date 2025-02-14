@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import commonAxios from "../utils/commonAxios";
 import { toast } from "react-toastify";
 
-const useFetchServices = () => {
-  const [services, setServices] = useState([]);
+export const usePackageHome = () => {
+  const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchPackages = async () => {
       try {
         // Get locationID from localStorage
         const currentLocation = JSON.parse(
@@ -19,31 +19,30 @@ const useFetchServices = () => {
         }
 
         const response = await commonAxios.get(
-          `/services?locationID=${currentLocation.locationID}`
+          `/products/${currentLocation.locationID}`
         );
+        console.log(response.data.data.products, "response");
 
         if (response.data.status === 200) {
-          setServices(response?.data?.data?.services);
+          setPackages(response?.data?.data?.products);
         }
       } catch (err) {
         const errorMessage =
           err.message === "Location not found"
             ? "Please select a location first"
             : err.response?.data?.message ||
-              "Failed to fetch services, please try again later";
+              "Failed to fetch packages, please try again later";
 
         setError(errorMessage);
         toast.error(errorMessage);
-        console.error("Error fetching services:", err);
+        console.error("Error fetching packages:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
+    fetchPackages();
   }, []);
 
-  return { services, loading, error };
+  return { packages, loading, error };
 };
-
-export default useFetchServices;

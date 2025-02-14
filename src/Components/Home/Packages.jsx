@@ -1,56 +1,9 @@
-import React from "react";
+import PropTypes from 'prop-types';
 import { FaBolt } from "react-icons/fa";
 import { HiArrowRight } from "react-icons/hi";
+import { usePackageHome } from "../../hooks/usePackage";
 
-const packages = [
-  {
-    title: "Monthly Package",
-    description:
-      "We denounce with righteous indignation dislike beguiled and demoralize",
-    price: "499.9",
-    period: "per year",
-    features: [
-      "Cryotherapy",
-      "Red Light Therapy",
-      "Halotherapy",
-      "Infrared Sauna",
-      "Compression Therapy",
-      "Massage Chairs",
-    ],
-  },
-  {
-    title: "UNLIMITED ACCESS",
-    description:
-      "We denounce with righteous indignation dislike beguiled and demoralize",
-    price: "99",
-    period: "per month",
-    features: [
-      "Cryotherapy",
-      "Red Light Therapy",
-      "Halotherapy",
-      "Infrared Sauna",
-      "Compression Therapy",
-      "Massage Chairs",
-    ],
-  },
-  {
-    title: "Yearly Package",
-    description:
-      "We denounce with righteous indignation dislike beguiled and demoralize",
-    price: "499.9",
-    period: "per year",
-    features: [
-      "Cryotherapy",
-      "Red Light Therapy",
-      "Halotherapy",
-      "Infrared Sauna",
-      "Compression Therapy",
-      "Massage Chairs",
-    ],
-  },
-];
-
-const PricingCard = ({ title, description, price, period, features }) => (
+const PackageCard = ({ title, description, price, period, features }) => (
   <div className="border border-gray-200 rounded-lg p-8 flex flex-col">
     <div className="flex justify-center items-center gap-5 mb-5">
       <div className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center">
@@ -76,22 +29,57 @@ const PricingCard = ({ title, description, price, period, features }) => (
   </div>
 );
 
-const PricingSection = () => (
-  <div className="py-16">
-    <div className="text-center mb-12">
-      <h3 className="text-red-500 text-sm font-semibold uppercase">
-        Our Packages
-      </h3>
-      <h2 className="text-gray-800 text-3xl font-bold mt-2">
-        Choose Your Best
-      </h2>
+PackageCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  period: PropTypes.string.isRequired,
+  features: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+const getAttractivePackageName = (name) => {
+  switch (name) {
+    case '99 Membership':
+      return 'Standard Package';
+    case '199 Membership':
+      return 'Premium Package';
+    case '299 Membership':
+      return 'Ultimate Package';
+    // Add more cases as needed
+    default:
+      return name; // Fallback to original name if no match
+  }
+};
+
+const PricingSection = () => {
+  const { packages, error } = usePackageHome();
+  console.log(packages, "packages");
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div className="py-16">
+      <div className="text-center mb-12">
+        <h3 className="text-red-500 text-sm font-semibold uppercase">
+          Our Packages
+        </h3>
+        <h2 className="text-gray-800 text-3xl font-bold mt-2">
+          Choose Your Best
+        </h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
+        {packages.map((pkg, index) => (
+          <PackageCard 
+            key={index} 
+            title={getAttractivePackageName(pkg.name)}
+            description={pkg.description} 
+            price={pkg.price} 
+            period={pkg.expiration.value + ' ' + pkg.expiration.expirationType} 
+            features={pkg.servicesIncluded.map(service => service.name)}
+          />
+        ))}
+      </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
-      {packages.map((pkg, index) => (
-        <PricingCard key={index} {...pkg} />
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 export default PricingSection;

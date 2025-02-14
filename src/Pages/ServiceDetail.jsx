@@ -27,7 +27,7 @@ const ServiceDetail = () => {
   }, [serviceID]);
 
   return (
-    <div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md mt-20">
+    <div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="relative mb-4">
         <img
           src={serviceData.imageUrl.mainImageUrl}

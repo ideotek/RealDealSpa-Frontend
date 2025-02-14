@@ -2,7 +2,7 @@ import Logo from "../assets/Logo.png";
 import CalenderVector from "../assets/CalenderVector.png";
 import MaleAvatar from "../assets/svg/MaleAvatar.svg";
 import FemaleAvatar from "../assets/svg/FemaleAvatar.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
 function Sidebar() {
@@ -13,6 +13,8 @@ function Sidebar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState(localStorage.getItem('activeLink') || location.pathname);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('AccessToken');
@@ -60,6 +62,14 @@ function Sidebar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('activeLink', activeLink);
+  }, [activeLink]);
+
+  useEffect(() => {
+    setActiveLink(location.pathname);
+  }, [location.pathname]);
+
   const handleLogout = () => {
     localStorage.removeItem('AccessToken');
     localStorage.removeItem('customerDetails');
@@ -85,27 +95,24 @@ function Sidebar() {
             <nav className="hidden md:flex space-x-8">
               <Link 
                 to="/" 
-                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 relative group ${
-                  isScrolled ? 'text-red-600' : 'text-gray-600'
-                }`}
+                onClick={() => setActiveLink('/')}
+                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 relative group ${ activeLink === '/' ? 'text-red-600' : 'text-gray-600' }`}
               >
                   HOME
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </Link>
               <Link 
                 to="/services" 
-                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 relative group ${
-                  isScrolled ? 'text-red-600' : 'text-gray-600'
-                }`}
+                onClick={() => setActiveLink('/services')}
+                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 relative group ${ activeLink === '/services' ? 'text-red-600' : 'text-gray-600' }`}
               >
                 SERVICES
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </Link>
               <Link 
                 to="/packages" 
-                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 relative group ${
-                  isScrolled ? 'text-red-600' : 'text-gray-600'
-                }`}
+                onClick={() => setActiveLink('/packages')}
+                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 relative group ${ activeLink === '/packages' ? 'text-red-600' : 'text-gray-600' }`}
               >
                 PACKAGES
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>

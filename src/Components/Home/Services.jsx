@@ -1,9 +1,9 @@
 
-import useFetchServices from "../../hooks/useFetchServices"; 
+import {useServices} from "../../hooks/useServices"; 
 
 const ServicesSection = () => {
-  const { services } = useFetchServices();
-
+  const { services } = useServices();
+  console.log(services, "services");
   return (
     <div className="py-12">
       <div className="text-center mb-12">
@@ -29,8 +29,8 @@ const ServicesSection = () => {
               <div className="rounded-full flex items-center justify-center mb-4">
                 <img
                   src={service.imageUrl?.mainImageUrl}
-                  alt={service.name}
-                  className="w-10 h-10 object-cover rounded-full"
+                  alt={service.title}
+                  className="w-12 h-12 object-cover rounded-full"
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/50";
                   }}
