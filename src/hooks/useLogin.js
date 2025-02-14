@@ -10,6 +10,7 @@ export const useLogin = (navigate) => {
     try {
       const response = await commonAxios.post("/customer/login", values);
       const { status, customer, token, currentLocation } = response.data.data; 
+      console.log(response.data.data, "response");
       if (status) {
         localStorage.setItem("AccessToken", token);
         localStorage.setItem("customerDetails", JSON.stringify(customer)); 

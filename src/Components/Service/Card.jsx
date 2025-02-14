@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-
-const CalendarIcon = () => (
+import { useNavigate } from "react-router-dom";
+const CalendarIcon = ({ onClick }) => (
   <svg
+    onClick={onClick}
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6 text-white"
     fill="none"
@@ -21,20 +22,21 @@ const CalendarIcon = () => (
 
 const Card = memo(({ title, schedule, shortDescription, image, id }) => {
   const serviceUrl = `/services/${id}`;
+  const navigate = useNavigate();
   console.log(serviceUrl);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {/* Image section */}
-      <div className="w-full h-48 relative">
+      <div className="w-full h-80 relative">
         <img
           src={image?.mainImageUrl}
           alt={title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center bg-no-repeat"
           loading="lazy"
         />
-        <div className="absolute bottom-4 right-4 bg-orange-400 p-2 rounded-full cursor-pointer">
-          <CalendarIcon />
+        <div  className="absolute bottom-4 right-4 bg-orange-400 p-2 rounded-full cursor-pointer">
+          <CalendarIcon  onClick={() => navigate(serviceUrl)} />
         </div>
       </div>
 
@@ -55,9 +57,9 @@ const Card = memo(({ title, schedule, shortDescription, image, id }) => {
 
         {/* View More link */}
         <div>
-          <a href={serviceUrl} className="text-xs text-red-700">
+          <button onClick={() => navigate(serviceUrl)} className="text-xs text-red-700">
             View More
-          </a>
+          </button>
         </div>
       </div>
     </div>

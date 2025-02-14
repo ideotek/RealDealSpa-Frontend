@@ -13,10 +13,13 @@ import Loader from "./Components/Common/Loader";
 import Navbar from "./Components/Navbar";
 import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
+import ProfilePage from "./Pages/ProfilePage";
 
 import Home from "./Pages/Home";
 import ServicePage from "./Pages/ServicePage"
 import ServiceDetail from "./Pages/ServiceDetail";
+import Packages from "./Components/Home/Packages";
+import BookingHistoryPage from "./Pages/BookingHistoryPage";
 
 const Layout = () => (
   <div className="app-layout">
@@ -60,6 +63,9 @@ const App = () => (
           <Route index element={<Home />} />
           <Route path="/services" element={<ServicePage />} />
           <Route path="/services/:serviceID" element={<ServiceDetail />} />
+          <Route path="/packages" element={<Packages />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/booking-history" element={<BookingHistoryPage />} />
         </Route>
       </Routes>
       
