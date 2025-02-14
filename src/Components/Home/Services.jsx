@@ -1,25 +1,8 @@
-import { useState } from "react";
-import Loader from '../Common/Loader';
-import useFetchServices from '../../hooks/useFetchServices'; // Import the custom hook
+
+import useFetchServices from "../../hooks/useFetchServices"; 
 
 const ServicesSection = () => {
-  const { services, loading, error } = useFetchServices(); // Call the custom hook
-
-  if (loading) {
-    return (
-      <div className="py-12 text-center">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="py-12 text-center text-red-500">
-        <p>{error}</p>
-      </div>
-    );
-  }
+  const { services } = useFetchServices();
 
   return (
     <div className="py-12">

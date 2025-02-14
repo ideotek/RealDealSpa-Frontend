@@ -100,42 +100,64 @@ const ServiceDetail = () => {
                 <span>{'★'.repeat(5)}{'☆'.repeat(0)}</span> (0 Reviews)
             </div>
 
-            {/* Tab Navigation */}
-            <div className="flex space-x-4 mb-4">
-                <button onClick={() => setActiveTab('about')} className={`font-semibold ${activeTab === 'about' ? 'text-red-500' : 'text-gray-400'}`}>
-                    About
-                </button>
-                <button onClick={() => setActiveTab('howToUse')} className={`font-semibold ${activeTab === 'howToUse' ? 'text-red-500' : 'text-gray-400'}`}>
-                    How to use
-                </button>
-                <button onClick={() => setActiveTab('package')} className={`font-semibold ${activeTab === 'package' ? 'text-red-500' : 'text-gray-400'}`}>
-                    Package
-                </button>
-                <button onClick={() => setActiveTab('gallery')} className={`font-semibold ${activeTab === 'gallery' ? 'text-red-500' : 'text-gray-400'}`}>
-                    Gallery
-                </button>
-            </div>
+      {/* Tab Navigation */}
+      <div className="flex space-x-4 mb-4">
+        <button
+          onClick={() => setActiveTab("about")}
+          className={`font-semibold ${
+            activeTab === "about" ? "text-red-500" : "text-gray-400"
+          }`}
+        >
+          About
+        </button>
+        <button
+          onClick={() => setActiveTab("howToUse")}
+          className={`font-semibold ${
+            activeTab === "howToUse" ? "text-red-500" : "text-gray-400"
+          }`}
+        >
+          How to use
+        </button>
+        <button
+          onClick={() => setActiveTab("package")}
+          className={`font-semibold ${
+            activeTab === "package" ? "text-red-500" : "text-gray-400"
+          }`}
+        >
+          Package
+        </button>
+        <button
+          onClick={() => setActiveTab("gallery")}
+          className={`font-semibold ${
+            activeTab === "gallery" ? "text-red-500" : "text-gray-400"
+          }`}
+        >
+          Gallery
+        </button>
+      </div>
 
-            {/* Tab Content */}
-            {activeTab === 'about' && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-2">About</h2>
-                    <p className="text-gray-700 mb-2">{serviceData.description}</p>
-                    <ul className="list-disc list-inside text-gray-700">
-                        {serviceData.benefits.map((benefit, index) => (
-                            <li key={index}>{benefit}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            {activeTab === 'howToUse' && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-2">How to Use</h2>
-                    <p className="text-gray-700 mb-2">Here you can describe how to use the service.</p>
-                </div>
-            )}
+      {/* Tab Content */}
+      {activeTab === "about" && (
+        <div>
+          <h2 className="text-lg font-semibold mb-2">About</h2>
+          <p className="text-gray-700 mb-2">{serviceData.description}</p>
+          <ul className="list-disc list-inside text-gray-700">
+            {serviceData.benefits.map((benefit, index) => (
+              <li key={index}>{benefit}</li>
+            ))}
+          </ul>
         </div>
-    );
+      )}
+      {activeTab === "howToUse" && (
+        <div>
+          <h2 className="text-lg font-semibold mb-2">How to Use</h2>
+          <p className="text-gray-700 mb-2">
+            Here you can describe how to use the service.
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ServiceDetail;
