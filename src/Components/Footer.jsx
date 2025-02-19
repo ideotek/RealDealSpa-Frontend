@@ -59,7 +59,8 @@ const Footer = () => {
       <div className="border-t border-gray-200 mt-6 py-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-600 text-sm text-center md:text-left">
-            Copyright ©2024 REAL DEAL WELLNESS. All Rights Reserved. Designed and Developed by IDEOTEK INNOVATIONS
+            Copyright ©2024 REAL DEAL WELLNESS. All Rights Reserved. 
+            {/* Designed and Developed by IDEOTEK INNOVATIONS */}
           </p>
           <div className="flex space-x-4 text-gray-600 text-sm mt-4 md:mt-0">
             <a href="#" className="hover:text-gray-800">Terms & Conditions</a>
