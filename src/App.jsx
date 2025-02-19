@@ -20,6 +20,7 @@ import ServicePage from "./Pages/ServicePage"
 import ServiceDetail from "./Pages/ServiceDetail";
 import Packages from "./Components/Home/Packages";
 import BookingHistoryPage from "./Pages/BookingHistoryPage";
+import AccountTermination from "./Pages/Termination";
 
 const Layout = () => (
   <div className="app-layout">
@@ -66,6 +67,7 @@ const App = () => (
           <Route path="/packages" element={<Packages />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/booking-history" element={<BookingHistoryPage />} />
+          <Route path="/account/termination" element={<AccountTermination />} />
         </Route>
       </Routes>
       
