@@ -5,6 +5,7 @@ import MaleAvatar from "../assets/svg/MaleAvatar.svg";
 import FemaleAvatar from "../assets/svg/FemaleAvatar.svg";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef, memo } from "react";
+import commonAxios from "../utils/commonAxios";
 
 const NavLink = memo(({ to, active, onClick, children }) => (
   <Link
@@ -27,7 +28,10 @@ function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [membershipStatus, setMembershipStatus] = useState("");
+  const [membershipStatus, setMembershipStatus] = useState({
+    name: "No Plans Available",
+    status: false
+  });
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
@@ -46,18 +50,40 @@ function Navbar() {
         const firstName = parsedDetails.basicDetials.firstName || "";
         const lastName = parsedDetails.basicDetials.lastName || "";
         const fullName = `${firstName} ${lastName}`.trim();
-        const userGender = parsedDetails.basicDetials.gender || "male";
-        const membership = parsedDetails.membershipStatus || "Free Plan";
+        const userGender = parsedDetails.basicDetials.gender || "male"; 
 
         setIsLoggedIn(true);
         setUsername(fullName || "User");
         setGender(userGender.toLowerCase());
-        setMembershipStatus(membership);
+        
       } catch (error) {
         console.error("Error parsing customer details:", error);
         setUsername("User");
       }
     }
+  }, []);
+
+  useEffect(() => { 
+     commonAxios.get('/validatePlan').then(res => { 
+      if(res?.data?.data?.recurringProduct?.product?.name){
+        setMembershipStatus({
+          name: res?.data?.data?.recurringProduct?.product?.name,
+          status: true
+        });
+      }else{
+        setMembershipStatus({
+          name: "Free Plan",
+          status: false
+        });
+      } 
+    })
+    .catch(err => {
+      setMembershipStatus({
+        name: "No Available Plan",
+        status: false
+      });
+      console.log(err, "err");
+    })
   }, []);
 
   useEffect(() => {
@@ -320,9 +346,9 @@ function Navbar() {
         <div
           className={`w-full py-1 text-center text-sm font-medium ${
             isScrolled ? "bg-red-50 text-red-600" : "bg-red-600 text-white"
-          }`}
+          } `}
         >
-          Current Plan: {membershipStatus}
+          Current Plan: {membershipStatus.name}
         </div>
       )}
 

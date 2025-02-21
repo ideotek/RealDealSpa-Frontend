@@ -52,12 +52,12 @@ const WalletModal = ({ isOpen, onClose, walletData }) => {
           </p>
           <div className="bg-white p-4 rounded shadow-inner mb-4">
             <p className="text-center font-medium text-gray-700">Your Referral Code: 
-              <span className="text-red-600 font-bold ml-1">{walletData.referralCode || 'G3PSR2'}</span>
+              <span className="text-red-600 font-bold ml-1">{walletData.referralCode}</span>
             </p>
           </div>
           <button 
             onClick={() => {
-              navigator.clipboard.writeText(`https://book.realdealwellness.net/signup?ref=${walletData.referralCode || 'G3PSR2'}`)
+              navigator.clipboard.writeText(`https://book.realdealwellness.net/signup?ref=${walletData.referralCode}`)
                 .then(() => {
                   toast('Referral code copied!');
                 })

@@ -106,7 +106,6 @@ const ServiceDetail = () => {
         }
       })
       .catch((err) => {
-        console.log(err.response.data.data.valid, "err");
         if (err.response.data.data.valid) {
           const queryParams = [];
           if (email) queryParams.push(`email=${email}`);
@@ -130,7 +129,6 @@ const ServiceDetail = () => {
       });
   };
 
-  console.log(serviceData, "serviceData");
 
   const LoadingSkeleton = () => (
     <div className="w-full mx-auto p-6 bg-white rounded shadow-lg mt-20 max-w-7xl">

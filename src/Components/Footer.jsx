@@ -32,8 +32,8 @@ const Footer = () => {
         <div>
           <h3 className="text-red-600 font-semibold mb-4">HELP CENTER</h3>
           <ul className="space-y-2 text-gray-600">
-            <li><Link to="/aboutus" className="hover:text-gray-800">About Us</Link></li>
-            <li><Link to="/contactus" className="hover:text-gray-800">Contact Us</Link></li>
+            <li><Link to="/about_us" className="hover:text-gray-800">About Us</Link></li>
+            <li><Link to="/contact_us" className="hover:text-gray-800">Contact Us</Link></li>
               <li><Link to="/packages" className="hover:text-gray-800">Pricing</Link></li>
           </ul>
         </div>
@@ -64,8 +64,8 @@ const Footer = () => {
             {/* Designed and Developed by IDEOTEK INNOVATIONS */}
           </p>
           <div className="flex space-x-4 text-gray-600 text-sm mt-4 md:mt-0">
-           <Link to="/termsandcondition" className="hover:text-gray-800">Terms & Conditions</Link>
-            <Link to="/privacy" className="hover:text-gray-800">Privacy Policy</Link>
+           <Link to="/terms_and_conditions" className="hover:text-gray-800">Terms & Conditions</Link>
+            <Link to="/privacy_policy" className="hover:text-gray-800">Privacy Policy</Link>
           </div>
         </div>
       </div>

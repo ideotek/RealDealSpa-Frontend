@@ -16,7 +16,7 @@ const ProfilePage = () => {
   const [bookingHistory, setBookingHistory] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [walletData, setWalletData] = useState({ balance: 0, transactions: [] });
+  const [walletData, setWalletData] = useState({ balance: 0, transactions: [], referralCode: '' });
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   useEffect(() => {
@@ -61,9 +61,11 @@ const ProfilePage = () => {
     const fetchWalletData = async () => {
       try {
         const response = await commonAxios.get("/getPersonalWallet");
+
         setWalletData({
           balance: response.data.data.wallet.walletBalance,
-          transactions: response.data.data.wallet.transactions
+          transactions: response.data.data.wallet.transactions,
+          referralCode: response.data.data.referralInfo.referralCode
         });
       } catch (error) {
         console.error("Error fetching wallet data:", error);
@@ -386,11 +388,11 @@ const ProfilePage = () => {
           </div>
         </div>
       </main>
-      <footer className="bg-white shadow mt-8 border-t border-gray-100">
-        <div className="container mx-auto px-4 py-4 text-center text-gray-600">
+      <div className="bg-white shadow mt-8 border-t border-gray-100">
+        {/* <div className="container mx-auto px-4 py-4 text-center text-gray-600">
           &copy; {new Date().getFullYear()} Your Company. All rights reserved.
-        </div>
-      </footer>
+        </div> */}
+      </div>
 
       {/* Add the ChangePasswordModal */}
       <ChangePasswordModal 

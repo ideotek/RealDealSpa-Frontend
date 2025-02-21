@@ -140,7 +140,7 @@ const SignupPage = () => {
     dateOfBirth: '',
     country: '',
     timezone: '',
-    referralCode: '',
+    referralCode: new URLSearchParams(window.location.search).get('ref') || '',
   });
   const navigate = useNavigate();
 
@@ -217,6 +217,7 @@ const SignupPage = () => {
     
     const commonProps = {
       name,
+      value: values[name],
       onChange: handleChange,
       onBlur: handleBlur,
       className: "w-full p-2.5 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500",

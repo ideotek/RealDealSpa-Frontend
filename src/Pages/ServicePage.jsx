@@ -35,7 +35,6 @@ const ServicePage = () => {
   const { services, loading, error } = useServices();
   const [searchTerm, setSearchTerm] = useState("");
 
-  console.log(services, "services");
 
   const filteredServices = useMemo(
     () => services.filter(service => 

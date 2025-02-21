@@ -92,7 +92,7 @@ const FAQ = () => {
         ))}
       </div>
       <div className="mt-6 text-center">
-        <p className="text-gray-600">Didn't find what you're looking for? <span className="text-red-500 font-medium hover:underline"><Link to="/contactus">Contact us</Link></span></p>
+        <p className="text-gray-600">Didn't find what you're looking for? <span className="text-red-500 font-medium hover:underline"><Link to="/contact_us">Contact us</Link></span></p>
       </div>
     </div>
   );

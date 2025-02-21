@@ -3,7 +3,6 @@ import {useServices} from "../../hooks/useServices";
 
 const ServicesSection = () => {
   const { services } = useServices();
-  console.log(services, "services");
   return (
     <div className="py-12">
       <div className="text-center mb-12">

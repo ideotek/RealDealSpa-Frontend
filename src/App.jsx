@@ -94,12 +94,16 @@ const App = () => (
             <Route path="/packages" element={<Packages />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/booking-history" element={<BookingHistoryPage />} />
+          <Route path="/terms_and_conditions" element={<TermsandCondition />} />
+          <Route path="/privacy_policy" element={<PrivacyPolicy />} />
+          <Route path="/contact_us" element={<Contactus />} />
+          <Route path="/about_us" element={<Aboutus />} />
 
+          </Route>
           <Route path="/termsandcondition" element={<TermsandCondition />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/contactus" element={<Contactus />} />
           <Route path="/aboutus" element={<Aboutus />} />
-          </Route>
         </Routes>
       </Suspense>
       
