@@ -10,26 +10,20 @@ export const useLogin = (navigate) => {
     try {
       const response = await commonAxios.post("/customer/login", values);
       const { status, customer, token, currentLocation } = response.data.data; 
-      console.log(response.data.data, "response");
-      if (status) {
-        localStorage.setItem("AccessToken", token);
-        localStorage.setItem("customerDetails", JSON.stringify(customer)); 
-        localStorage.setItem("currentLocation", JSON.stringify(currentLocation)); 
-        toast.success("Login successful!");
-        navigate("/", { replace: true });
-      }
+      
+      if (!status) {
+        throw new Error('Login failed');
+      } 
+
+      localStorage.setItem("AccessToken", token);
+      localStorage.setItem("customerDetails", JSON.stringify(customer)); 
+      localStorage.setItem("currentLocation", JSON.stringify(currentLocation));  
+
+      toast.success("Login successful!");
+      navigate("/", { replace: true });
     } catch (error) {
-      toast.error("An error occurred during login.");
-      if (error.response) {
-        const { status, message } = error.response.data; 
-        if (status === 403) {
-          toast.error(`Login failed: ${message}`);
-        } else {
-          toast.error(`Error: ${message}`);
-        }
-      } else {
-        toast.error("An unexpected error occurred. Please try again later.");
-      }
+      const errorMessage = error.response?.data?.message || "An unexpected error occurred. Please try again later.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

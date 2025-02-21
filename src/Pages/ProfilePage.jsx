@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commonAxios from "../utils/commonAxios";
 import { Formik, Form } from "formik";
@@ -272,12 +272,21 @@ const ProfilePage = () => {
                           />
                         </div>
                         <div className="pt-6 border-t border-gray-200">
-                          <button
-                            type="submit"
-                            className="inline-flex justify-center py-2.5 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-                          >
-                            Update Profile
-                          </button>
+                          <div className="flex justify-between items-center">
+                            <button
+                              type="submit"
+                              className="inline-flex justify-center py-2.5 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                            >
+                              Update Profile
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => navigate('/account/termination')}
+                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                            >
+                              Terminate Account
+                            </button>
+                          </div>
                         </div>
                       </Form>
                     )}

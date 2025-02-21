@@ -24,6 +24,7 @@ const ServicePage = lazy(() => import("./Pages/ServicePage"));
 const ServiceDetail = lazy(() => import("./Pages/ServiceDetail"));
 const Packages = lazy(() => import("./Components/Home/Packages"));
 const BookingHistoryPage = lazy(() => import("./Pages/BookingHistoryPage"));
+import AccountTermination from "./Pages/Termination";
 const TermsandCondition = lazy(() => import("./Pages/TermsandCondition"));
 const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy"));
 const Contactus = lazy(() => import("./Pages/Contactus"));
@@ -94,12 +95,13 @@ const App = () => (
             <Route path="/packages" element={<Packages />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/booking-history" element={<BookingHistoryPage />} />
+            <Route path="/account/termination" element={<AccountTermination />} />
           <Route path="/terms_and_conditions" element={<TermsandCondition />} />
           <Route path="/privacy_policy" element={<PrivacyPolicy />} />
           <Route path="/contact_us" element={<Contactus />} />
           <Route path="/about_us" element={<Aboutus />} />
 
-          </Route>
+        </Route>
           <Route path="/termsandcondition" element={<TermsandCondition />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/contactus" element={<Contactus />} />
