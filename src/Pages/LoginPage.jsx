@@ -5,54 +5,55 @@ import TextField from "../Components/Common/ResuableFields/TextField";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
 
+// Move constants outside component
+const formFields = [
+  {
+    label: "Email",
+    placeholder: "Enter your email",
+    type: "email",
+    name: "email",
+  },
+  {
+    label: "Password",
+    placeholder: "Enter your password",
+    type: "password",
+    name: "password",
+  },
+];
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(4, "Password must be at least 4 characters")
+    .required("Password is required"),
+});
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [loading, handleSubmit] = useLogin(navigate);
-  const formFields = [
-    {
-      label: "Email",
-      placeholder: "Enter your email",
-      type: "email",
-      name: "email",
-    },
-    {
-      label: "Password",
-      placeholder: "Enter your password",
-      type: "password",
-      name: "password",
-    },
-  ];
-
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(4, "Password must be at least 4 characters")
-      .required("Password is required"),
-  });
 
   return (
     <div
-      className="w-screen h-screen bg-cover bg-center"
+      className="min-h-screen w-full bg-cover bg-center bg-no-repeat px-4 sm:px-6 lg:px-8"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-2xl font-bold text-center">Welcome Back</h1>
-          <p className="text-sm text-center text-gray-600">
+      <div className="flex min-h-screen items-center justify-center py-8">
+        <div className="w-full max-w-sm sm:max-w-md bg-white rounded shadow-xl p-6 sm:p-8 md:p-10">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2">Welcome Back</h1>
+          <p className="text-sm sm:text-base text-center text-gray-600 mb-6">
             Login into your account
           </p>
 
-          <div className="relative my-6 text-center"></div>
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
             {({ errors, touched, handleChange, handleBlur, setTouched }) => (
-              <Form>
-                <div className="space-y-4">
+              <Form className="space-y-6">
+                <div className="space-y-5">
                   {formFields.map(({ label, placeholder, type, name }) => (
                     <TextField
                       key={label}
@@ -70,10 +71,10 @@ const LoginPage = () => {
                     />
                   ))}
                 </div>
-                <div className="mt-10">
+                <div>
                   <button
                     type="submit"
-                    className="w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 flex items-center justify-center"
+                    className="w-full px-4 py-3 text-sm sm:text-base text-white bg-red-500 rounded hover:bg-red-600 transition-colors duration-200 flex items-center justify-center"
                     disabled={loading}
                   >
                     {loading ? (
@@ -87,13 +88,13 @@ const LoginPage = () => {
             )}
           </Formik>
 
-          <p className="mt-6 text-sm text-center">
+          <p className="mt-8 text-sm sm:text-base text-center">
             Don&apos;t have an account?{" "}
             <Link
               to="/signup"
-              className="text-red-500 hover:text-red-600 font-medium"
+              className="text-red-500 hover:text-red-600 font-medium transition-colors duration-200"
             >
-              Sign up!
+              Sign up
             </Link>
           </p>
         </div>

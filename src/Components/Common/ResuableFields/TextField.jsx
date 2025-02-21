@@ -3,7 +3,7 @@
 const TextField = ({icon, type, name, value, onChange, placeholder, error, touched, Class}) => { 
 
   return (
-    <div className="flex items-center space-x-2 bg-gray-100 p-3 rounded-lg shadow-sm w-full max-w-sm">
+    <div className="flex items-center space-x-2 bg-gray-100 p-3 rounded shadow-sm w-full max-w-sm">
       <span className="text-gray-400">
        {icon && icon}
       </span>

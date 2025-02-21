@@ -8,13 +8,13 @@ import Loader from "../Components/Common/Loader";
 
 const ServiceCard = React.memo(({ service, onClick }) => (
   <Card
-    key={service.id}
-    title={service.title}
+    key={service._id}
+    title={service.name}
     schedule={service.duration}
     shortDescription={service.shortDescription}
     price={service.price}
-    image={service.imageUrl.mainImageUrl}
-    id={service.id}
+    image={service.imageUrl}
+    id={service._id}
     onClick={onClick}
   />
 ));

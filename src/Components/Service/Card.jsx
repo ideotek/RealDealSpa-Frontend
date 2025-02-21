@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { memo } from "react"; 
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-
-const CalendarIcon = () => (
+import { useNavigate } from "react-router-dom";
+const CalendarIcon = ({ onClick }) => (
   <svg
+    onClick={onClick}
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6 text-white"
     fill="none"
@@ -20,55 +20,71 @@ const CalendarIcon = () => (
   </svg>
 );
 
-const Card = memo(
-  ({ title, schedule, shortDescription, image, id, onClick, price, expiration, features, paymentLink }) => {
-    const serviceUrl = `/services/${id}`;
+const Card = memo(({ title, schedule, shortDescription, image, id }) => {
+  const serviceUrl = `/services/${id}`;
+  const navigate = useNavigate();
+  
+  return (
+    <div className="group bg-white rounded shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out">
+      {/* Image section */}
+      <div className="w-full h-52 sm:h-64 md:h-80 relative overflow-hidden">
+        <img
+          src={image?.mainImageUrl}
+          alt={title}
+          className="w-full h-full object-cover object-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+        <div 
+          className="absolute bottom-4 right-4 bg-red-400 p-2.5 rounded-full cursor-pointer hover:bg-red-500 transform hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          <CalendarIcon onClick={() => navigate(serviceUrl)} />
+        </div>
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
 
-    return (
-      <div
-        className="card transition-transform duration-300 ease-in-out transform hover:scale-105"
-        onClick={onClick}
-      >
-        {/* Image section */}
-        <Link to={serviceUrl}>
-          <div className="w-full h-48 relative">
-            <img
-              src={image}
-              alt={title}
-              className="w-full h-full object-cover rounded-t"
-              loading="lazy"
-            />
-            <div className="absolute bottom-4 right-4 bg-orange-400 p-2 rounded-full cursor-pointer">
-              <CalendarIcon />
-            </div>
-          </div>
-        </Link>
-        {/* Content section */}
-        <div className="p-6 rounded-b border-x border-b border-gray-200">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">{title}</h3>
-          <p className="text-gray-600 mb-4">
-            Price: ${price} <br />
-            Duration: {expiration.value} {expiration.expirationType}
+      {/* Content section */}
+      <div className="p-5 sm:p-6 space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 group-hover:text-red-600 transition-colors duration-300">
+            {title}
+          </h3>
+          <p className="text-sm sm:text-base text-gray-600 font-medium">
+            Duration: {schedule?.duration}
+            <span className="text-xs">{schedule?.durationType}</span>
           </p>
-          <p className="text-gray-600 mb-4">{shortDescription}</p>
+        </div>
 
-          {/* Features list */}
-          <div className="mb-4">
-            <h4 className="font-semibold">Features:</h4>
-            <ul className="list-disc list-inside">
-              {features.map((feature, index) => (
-                <li key={index} className="text-gray-600">{feature}</li>
-              ))}
-            </ul>
+        {/* Description */}
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <p className="text-sm sm:text-base text-gray-600 line-clamp-2 leading-relaxed">
+              {shortDescription}
+            </p>
           </div>
+        </div>
 
-          {/* Payment link */}
-          <a href={paymentLink} className="text-xs text-red-700">Purchase Now</a>
+        {/* View More button */}
+        <div className="pt-2">
+          <button 
+            onClick={() => navigate(serviceUrl)} 
+            className="inline-flex items-center text-sm sm:text-base text-red-600 hover:text-red-700 font-medium transition-colors duration-300 group"
+          >
+            View More
+            <svg 
+              className="w-4 h-4 ml-1 mt-1 transform" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 Card.propTypes = {
   title: PropTypes.string.isRequired,

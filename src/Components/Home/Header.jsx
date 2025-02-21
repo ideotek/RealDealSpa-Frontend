@@ -15,14 +15,14 @@ const Header = () => {
   return (
     <div className="w-full bg-gradient-to-r from-white via-red-100 to-white flex flex-col items-center justify-center">
         <Navbar/>
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center mt-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center mt-28">
         <div className="lg:w-1/2 text-center lg:text-left">
           <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
             Highly Professional SPA
           </p>
           <h1 className="mt-4 text-4xl lg:text-6xl font-bold text-gray-800 leading-tight">
-            Rejuvenate <span className="text-red-500">YOUR</span> <br />
-            <span className="text-red-500">BODY AND MIND</span>
+            Rejuvenate <span className="text-red-500">YOUR</span> 
+            <div className="text-red-500">BODY AND MIND</div>
           </h1>
           <p className="mt-4 text-gray-600 text-lg">
             Rejuvenate your mind and body by embracing mindful practices,

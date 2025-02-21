@@ -4,7 +4,7 @@ import PhoneInput from "react-phone-number-input"; // Ensure to import the Phone
 const PhoneField = ({ icon, value, onChange, error, touched }) => {
   return (
     <div className="mb-4 w-full max-w-sm"> 
-      <div className="flex items-center space-x-2 bg-gray-100 p-3 rounded-lg shadow-sm w-full">
+      <div className="flex items-center space-x-2 bg-gray-100 p-3 rounded shadow-sm w-full">
         {icon && <span className="text-gray-400">{icon}</span>}
         <PhoneInput
           international

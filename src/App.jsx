@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,24 +11,48 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoadingProvider, LoadingContext } from "./utils/commonAxios";
 import Loader from "./Components/Common/Loader";
+import Footer from './Components/Footer';
+import React from 'react';
 
-import Navbar from "./Components/Navbar";
-import LoginPage from "./Pages/LoginPage";
-import SignupPage from "./Pages/SignupPage";
+// Lazy load components
+const Navbar = lazy(() => import("./Components/Navbar"));
+const LoginPage = lazy(() => import("./Pages/LoginPage"));
+const SignupPage = lazy(() => import("./Pages/SignupPage"));
+const ProfilePage = lazy(() => import("./Pages/ProfilePage"));
+const Home = lazy(() => import("./Pages/Home"));
+const ServicePage = lazy(() => import("./Pages/ServicePage"));
+const ServiceDetail = lazy(() => import("./Pages/ServiceDetail"));
+const Packages = lazy(() => import("./Components/Home/Packages"));
+const BookingHistoryPage = lazy(() => import("./Pages/BookingHistoryPage"));
+const TermsandCondition = lazy(() => import("./Pages/TermsandCondition"));
+const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy"));
+const Contactus = lazy(() => import("./Pages/Contactus"));
+const Aboutus = lazy(() => import("./Pages/Aboutus"));
 
-import Home from "./Pages/Home";
-import ServicePage from "./Pages/ServicePage"
-import ServiceDetail from "./Pages/ServiceDetail";
+// Add this new component
+const ScrollToTop = () => {
+  const location = useLocation();
+  
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  return null;
+};
 
 const Layout = () => {
   const location = useLocation();
 
   return (
     <div className="app-layout">
-      <Navbar />
-      <main className={location.pathname === '/' ? '' : 'mt-[5rem]'}>
-        <Outlet />
-      </main>
+      <Suspense fallback={<Loader />}>
+        <ScrollToTop />
+        <Navbar />
+        <main className={location.pathname === '/' ? '' : 'mt-[5rem]'}>
+          <Outlet />
+        </main>
+        <Footer />
+      </Suspense>
     </div>
   );
 };
@@ -49,24 +74,34 @@ const App = () => (
   <LoadingProvider>
     <Router>
       <ToastContainer {...TOAST_CONFIG} />
-      <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
 
-        {/* Protected routes */}
-        <Route
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<Home />} />
-          <Route path="/services" element={<ServicePage />} />
-          <Route path="/services/:serviceID" element={<ServiceDetail />} />
-        </Route>
-      </Routes>
+          {/* Protected routes */}
+          <Route
+            element={
+              <PrivateRoute>
+                <Layout />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<Home />} />
+            <Route path="/services" element={<ServicePage />} />
+            <Route path="/services/:serviceID" element={<ServiceDetail />} />
+            <Route path="/packages" element={<Packages />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/booking-history" element={<BookingHistoryPage />} />
+
+          <Route path="/termsandcondition" element={<TermsandCondition />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/contactus" element={<Contactus />} />
+          <Route path="/aboutus" element={<Aboutus />} />
+          </Route>
+        </Routes>
+      </Suspense>
       
       <LoadingContext.Consumer>
         {({ loading }) => loading && <Loader />}
