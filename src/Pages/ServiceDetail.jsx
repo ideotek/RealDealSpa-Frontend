@@ -46,6 +46,45 @@ const ImageGallery = ({ images }) => (
   </motion.div>
 );
 
+const FAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <motion.div 
+      className="border-b border-gray-200 py-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <button
+        className="flex justify-between items-center w-full text-left"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h3 className="text-lg font-semibold text-gray-800">{question}</h3>
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-xl text-gray-600"
+        >
+          ↓
+        </motion.span>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <p className="mt-3 text-gray-600 leading-relaxed">{answer}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
 const ServiceDetail = () => {
   const { serviceID } = useParams(); // Get serviceID from route parameters
   const [serviceData, setServiceData] = useState(null);
@@ -199,10 +238,10 @@ const ServiceDetail = () => {
         </motion.h1>
 
         <div className="flex flex-wrap gap-3 mb-8">
-          {["about", "how To Use", "package", "gallery"].map((tab) => (
+          {["about", "Benefits", "package", "gallery", "FAQ"].map((tab) => (
             <TabButton
               key={tab}
-              label={tab.charAt(0).toUpperCase() + tab.slice(1)}
+              label={tab}
               isActive={activeTab === tab}
               onClick={() => setActiveTab(tab)}
             />
@@ -221,6 +260,12 @@ const ServiceDetail = () => {
             {activeTab === "about" && (
               <div>
                 <p className="text-gray-700 mb-2">{serviceData.description}</p>
+                
+              </div>
+            )}
+            {activeTab === "Benefits" && (
+              <div>
+                <div className="prose max-w-none">
                 {serviceData.benefits?.length > 0 && (
                   <ul className="list-disc list-inside text-gray-700">
                     {serviceData.benefits.map((benefit, index) => (
@@ -228,12 +273,6 @@ const ServiceDetail = () => {
                     ))}
                   </ul>
                 )}
-              </div>
-            )}
-            {activeTab === "how To Use" && (
-              <div>
-                <div className="prose max-w-none">
-                  {serviceData.howToUse || "No instructions available."}
                 </div>
               </div>
             )}
@@ -260,6 +299,21 @@ const ServiceDetail = () => {
                   a.name.localeCompare(b.name)
                 ) || []} 
               />
+            )}
+            {activeTab === "FAQ" && (
+              <div className="space-y-2">
+                {serviceData.FAQ?.length > 0 ? (
+                  serviceData.FAQ.map((faq) => (
+                    <FAQItem
+                      key={faq._id}
+                      question={faq.question}
+                      answer={faq.answer}
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-600">No FAQ available for this service.</p>
+                )}
+              </div>
             )}
           </motion.div>
         </AnimatePresence>
