@@ -112,7 +112,7 @@ const PricingSection = () => {
   }
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20">
+    <div className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h3 className="inline-block px-4 py-1 bg-red-100 text-red-600 text-sm font-semibold rounded-full mb-4">

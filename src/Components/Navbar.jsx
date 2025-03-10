@@ -123,10 +123,22 @@ function Navbar() {
     { path: "/packages", label: "PACKAGES" },
   ];
 
+  const getPageName = (pathname) => {
+    // Remove leading slash and convert to title case
+    const path = pathname.substring(1);
+    if (!path) return 'Home';
+    
+    // Handle paths with dashes and convert to spaces
+    return path
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   return (
     <header
       className={`w-full fixed top-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md" : "bg-transparent"
+        isScrolled ? "bg-white" : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -152,7 +164,7 @@ function Navbar() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-">
+          <div className="flex items-center">
             <div ref={dropdownRef} className="relative">
               {isLoggedIn ? (
                 <div className="flex items-center">
@@ -326,11 +338,31 @@ function Navbar() {
         </div>
       )}
 
+      {location.pathname !== '/' && (
+        <div className="w-full bg-white shadow-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="h-10 flex items-center">
+              <button 
+                onClick={() => navigate(-1)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <h1 className="text-lg font-semibold ml-2">
+                {getPageName(location.pathname)}
+              </h1>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         ref={mobileMenuRef}
         className={`md:hidden transition-all duration-300 ease-in-out ${
           isMobileMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-        } overflow-hidden bg-white shadow-lg`}
+        } overflow-hidden bg-white `}
       >
         <nav className="px-4 pt-2 pb-4 space-y-2">
           {navLinks.map(({ path, label }) => (

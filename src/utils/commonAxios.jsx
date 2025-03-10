@@ -1,12 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import Swal from "sweetalert2";
+import { toast } from 'react-toastify';
 import React from 'react';
 // Create axios instance with base configuration
 const commonAxios = axios.create({
   baseURL: import.meta.env.VITE_BASEURL,
-  // baseURL:"/api/",
   withCredentials: true,
 });
 
@@ -54,19 +53,11 @@ commonAxios.interceptors.response.use(
     
     if (error.response?.status === 401) {
       localStorage.removeItem("AccessToken");
-      Swal.fire({
-        icon: "error",
-        title: "Session Expired",
-        text: "Session has expired. Please login again.",
-        confirmButtonText: "Ok",
-      }).then(() => window.location.href = "/login");
-    } else if (error.response?.status === 500) {
-      Swal.fire({
-        icon: "error",
-        title: "Server Error",
-        text: "An unexpected error occurred. Please try again later.",
-        confirmButtonText: "Ok",
+      toast.error("Session has expired. Please login again.", {
+        onClose: () => window.location.href = "/login"
       });
+    } else if (error.response?.status === 500) {
+      toast.error("An unexpected error occurred. Please try again later.");
     }
     return Promise.reject(error);
   }
