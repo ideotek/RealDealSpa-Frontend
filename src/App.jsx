@@ -5,6 +5,7 @@ import {
   Route,
   Outlet,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import PrivateRoute from "./Auth/PrivateRoute";
 import { ToastContainer } from "react-toastify";
@@ -43,13 +44,15 @@ const ScrollToTop = () => {
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   return (
     <div className="app-layout">
       <Suspense fallback={<Loader />}>
         <ScrollToTop />
         <Navbar />
-        <main className={location.pathname === '/' ? '' : 'mt-[5rem]'}>
+        <main className={location.pathname === '/' ? '' : 'mt-[8rem]'}>
           <Outlet />
         </main>
         <Footer />

@@ -1,4 +1,3 @@
-
 import {useServices} from "../../hooks/useServices"; 
 
 const ServicesSection = () => {
@@ -19,13 +18,15 @@ const ServicesSection = () => {
           <p>No services available for this location.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4">
+        <div className="flex flex-wrap gap-6 mx-auto px-4 justify-center items-stretch">
           {services.map((service, index) => (
-            <div
+            <div 
               key={service._id || index}
-              className={`flex flex-col items-center text-center p-6 rounded transition-all duration-300 bg-white text-gray-800 hover:bg-red-500 hover:text-white shadow-md`}
+              className={`flex flex-col items-center text-center p-6 rounded w-[25rem] transition-all duration-300 
+                bg-white text-gray-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 
+                hover:text-white shadow-md hover:shadow-lg`}
             >
-              <div className="rounded-full flex items-center justify-center mb-4">
+              <div className="rounded-full bg-gray-50 flex items-center justify-center mb-4">
                 <img
                   src={service.imageUrl?.mainImageUrl}
                   alt={service.title}
@@ -36,7 +37,7 @@ const ServicesSection = () => {
                 />
               </div>
               <h3 className="text-lg font-semibold">{service.name}</h3>
-              <p className="text-sm mt-2 line-clamp-3 overflow-hidden">
+              <p className="text-sm mt-2 line-clamp-3">
                 {service.shortDescription || service.description}
               </p>
             </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import commonAxios from "../utils/commonAxios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -15,9 +15,14 @@ const ProfilePage = () => {
 //   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [bookingHistory, setBookingHistory] = useState([]);
   const navigate = useNavigate();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [walletData, setWalletData] = useState({ balance: 0, transactions: [], referralCode: '' });
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get('wallet');
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(Boolean(tab)||false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,19 +41,20 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const [bookings] = await Promise.all([
-          commonAxios.get("/customer/appointments?type=future"),
-        ]);
-        setBookingHistory(bookings?.data?.data?.events?.map(booking => ({
-          id: booking.id,
-          serviceName: booking.title,
-          date: new Date(booking.startTime).toLocaleDateString(),
-          time: new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          status: booking.appointmentStatus.charAt(0).toUpperCase() + booking.appointmentStatus.slice(1)
-        })));
+        const bookings = await commonAxios.get("/customer/appointments?type=future");
+        const confirmedBookings = bookings?.data?.data?.events
+          ?.filter(booking => booking.appointmentStatus.toLowerCase() === 'confirmed')
+          ?.map(booking => ({
+            id: booking.id,
+            serviceName: booking.title,
+            date: new Date(booking.startTime).toLocaleDateString(),
+            time: new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            status: booking.appointmentStatus.charAt(0).toUpperCase() + booking.appointmentStatus.slice(1)
+          })) || [];
+        setBookingHistory(confirmedBookings);
       } catch (error) {
         console.error("Error fetching history:", error);
-        showToast.error("Failed to load history data.");
+        showToast.error("Failed to load confirmed bookings.");
       }
     };
 
@@ -106,18 +112,18 @@ const ProfilePage = () => {
     }
   };
 
+  const paginatedBookings = bookingHistory.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-
-    // if (!userData) return <p className="text-center mt-10">Loading...</p>;
+  // if (!userData) return <p className="text-center mt-10">Loading...</p>;
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
           <div className="max-w-7xl mx-auto space-y-8">
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
-            </div>
 
             {/* Quick Actions */}
             <div className="bg-white rounded shadow-sm border border-gray-100 p-6">
@@ -154,7 +160,7 @@ const ProfilePage = () => {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-4xl">
               {/* Left Column */}
               <div className="lg:col-span-1 space-y-8">
                 {/* Profile Card */}
@@ -202,10 +208,10 @@ const ProfilePage = () => {
               </div>
 
               {/* Right Column */}
-              <div className="lg:col-span-2 space-y-8">
+              <div className="lg:col-span-2">
                 {/* Edit Profile Form */}
-                <div className="bg-white rounded shadow-sm border border-gray-100 p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                <div className="bg-white rounded shadow-sm border border-gray-100 px-4 py-4 h-full flex flex-col justify-center">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4 uppercase">
                     Edit Profile
                   </h2>
                   <Formik
@@ -349,46 +355,78 @@ const ProfilePage = () => {
 
                 {/* Booking History */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Bookings
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 uppercase">
+                    Upcoming Bookings
                   </h3>
                   {bookingHistory.length > 0 ? (
-                    <div className="space-y-3">
-                      {bookingHistory.map((booking) => (
-                        <div
-                          key={booking.id}
-                          className="p-4 hover:bg-red-50 rounded transition-colors"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-medium text-gray-900">
-                                {booking.serviceName}
-                              </h4>
-                              <p className="text-sm text-gray-500">
-                                {booking.date} at {booking.time}
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              
-                              <span
-                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                  booking.status === "Confirmed"
-                                    ? "bg-green-100 text-green-800"
-                                    : booking.status === "Pending"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-red-100 text-red-800"
-                                }`}
-                              >
-                                {booking.status}
-                              </span>
+                    <>
+                      <div className="space-y-3">
+                        {paginatedBookings.map((booking) => (
+                          <div
+                            key={booking.id}
+                            className="p-4 hover:bg-red-50 rounded transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h4 className="font-medium text-gray-900">
+                                  {booking.serviceName}
+                                </h4>
+                                <p className="text-sm text-gray-500">
+                                  {booking.date} at {booking.time}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                
+                                <span
+                                  className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${
+                                    booking.status === "Confirmed"
+                                      ? "bg-green-100 text-green-800"
+                                      : booking.status === "Pending"
+                                      ? "bg-yellow-100 text-yellow-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {booking.status}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                      <div className="flex gap-2 mt-2 justify-center">
+                        <button
+                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                          className={`px-2 py-0.5 text-sm rounded ${
+                            currentPage === 1 ? 'bg-gray-100 text-gray-400' : 'bg-red-600 text-white'
+                          }`}
+                        >
+                          Prev
+                        </button>
+                        <span className="text-sm text-gray-600">
+                          {currentPage}/{Math.ceil(bookingHistory.length / itemsPerPage)}
+                        </span>
+                        <button
+                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(bookingHistory.length / itemsPerPage)))}
+                          disabled={currentPage >= Math.ceil(bookingHistory.length / itemsPerPage)}
+                          className={`px-2 py-0.5 text-sm rounded ${
+                            currentPage >= Math.ceil(bookingHistory.length / itemsPerPage)
+                              ? 'bg-gray-100 text-gray-400'
+                              : 'bg-red-600 text-white'
+                          }`}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </>
                   ) : (
-                    <div className="text-center py-4">
-                      <p className="text-gray-500">No bookings yet</p>
+                    <div className="text-center">
+                      <div className="flex flex-col items-center">
+                        <p className="text-gray-600 font-medium mb-2">No Bookings Yet</p>
+                        <p className="text-gray-400 text-sm">
+                          Your upcoming appointments will appear here
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
