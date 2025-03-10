@@ -259,8 +259,13 @@ const ServiceDetail = () => {
           >
             {activeTab === "about" && (
               <div>
-                <p className="text-gray-700 mb-2">{serviceData.description}</p>
-                
+                <div className="prose max-w-none space-y-4">
+                  {serviceData.description.split('\n').map((paragraph, index) => (
+                    <p key={index} className="text-gray-700">
+                      {paragraph.trim()}
+                    </p>
+                  ))}
+                </div>
               </div>
             )}
             {activeTab === "Benefits" && (

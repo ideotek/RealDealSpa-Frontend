@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import commonAxios from "../utils/commonAxios";
 import { showToast } from "../utils/toast";
 
@@ -6,46 +6,8 @@ const BookingHistoryPage = () => {
   const [bookingHistory, setBookingHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-  const [showCancelModal, setShowCancelModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [cancelReason, setCancelReason] = useState('');
-
-  const handleCancelClick = (appointment) => {
-    setSelectedAppointment(appointment);
-    setShowCancelModal(true);
-  };
-
-  const cancelAppointment = async () => {
-    if (!cancelReason.trim()) {
-      showToast.error('Please provide a reason for cancellation');
-      return;
-    } 
-
-    try {
-      await commonAxios.patch(`/appointments/${selectedAppointment.id}`, {
-        appointmentStatus: "cancelled",
-        notes: cancelReason,
-        locationID: selectedAppointment.locationId
-      });
-      
-      setBookingHistory(prevBookings => 
-        prevBookings.map(booking => 
-          booking.id === selectedAppointment.id 
-            ? { ...booking, status: 'Cancelled' }
-            : booking
-        )
-      );
-      
-      showToast.success('Appointment cancelled successfully');
-      setShowCancelModal(false);
-      setCancelReason('');
-      setSelectedAppointment(null);
-    } catch (error) {
-      console.error('Error cancelling appointment:', error);
-      showToast.error('Failed to cancel appointment');
-    }
-  };
-
+  
+ 
   useEffect(() => {
     const fetchBookingHistory = async () => {
       try {
@@ -158,12 +120,21 @@ const BookingHistoryPage = () => {
                             {booking.status}
                           </span>
                           {(booking.status === 'Confirmed' || booking.status === 'Pending') && (
-                            <button
-                              onClick={() => handleCancelClick(booking)}
-                              className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
-                            >
-                              Cancel
-                            </button>
+                            <div className="space-x-2">
+                              <button
+                                onClick={() => window.open(`https://msgsndr.com/widget/cancel-booking?event_id=${booking.id}`, '_blank')}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+                              >
+                                Cancel
+                              </button>
+                              <button
+
+                                onClick={() => window.open(`https://msgsndr.com/widget/booking/${booking?.calendarId}?event_id=${booking?.id}`, '_blank')}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                              >
+                                Reschedule
+                              </button>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -186,44 +157,6 @@ const BookingHistoryPage = () => {
         </div>
       </main>
 
-      {/* Cancel Modal */}
-      {showCancelModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Cancel Appointment</h3>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Please provide a reason for cancellation
-              </label>
-              <textarea
-                value={cancelReason}
-                onChange={(e) => setCancelReason(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                rows="4"
-                placeholder="Enter your reason here..."
-              />
-            </div>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => {
-                  setShowCancelModal(false);
-                  setCancelReason('');
-                  setSelectedAppointment(null);
-                }}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
-              >
-                Close
-              </button>
-              <button
-                onClick={cancelAppointment}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Cancel Appointment
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
