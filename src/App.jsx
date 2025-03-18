@@ -48,11 +48,11 @@ const Layout = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   return (
-    <div className="app-layout">
+    <div className="app-layout ">
       <Suspense fallback={<Loader />}>
         <ScrollToTop />
         <Navbar />
-        <main className={location.pathname === '/' ? '' : 'mt-[8rem]'}>
+        <main className={location.pathname === '/' ? '' : 'mt-[8rem] '}>
           <Outlet />
         </main>
         <Footer />

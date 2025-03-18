@@ -8,14 +8,14 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const TabButton = ({ label, isActive, onClick }) => (
   <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
     onClick={onClick}
-    className={`px-4 py-2 uppercase font-bold ${
+    className={`w-full text-left px-6 py-4 transition-all duration-300 ${
       isActive
-        ? "text-red-500"
-        : "text-gray-600 hover:bg-gray-200"
-    }`}
+        ? "bg-red-500 text-white shadow-md rounded-lg"
+        : "text-gray-700 hover:bg-gray-100 rounded-lg"
+    } font-medium text-sm tracking-wide`}
   >
     {label}
   </motion.button>
@@ -25,7 +25,7 @@ const ImageGallery = ({ images }) => (
   <motion.div 
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    className="grid grid-cols-2 md:grid-cols-3 gap-4"
+    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
   >
     {images?.map((image, index) => (
       <motion.div
@@ -33,14 +33,14 @@ const ImageGallery = ({ images }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
-        className="relative group overflow-hidden rounded shadow-lg"
+        className="relative group rounded-xl overflow-hidden shadow-lg"
       >
         <img
           src={image.url}
           alt={image.name || `Gallery ${index + 1}`}
-          className="w-full h-48 md:h-64 object-cover transform transition-all duration-500 group-hover:scale-110"
+          className="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110 "
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
       </motion.div>
     ))}
   </motion.div>
@@ -51,19 +51,19 @@ const FAQItem = ({ question, answer }) => {
 
   return (
     <motion.div 
-      className="border-b border-gray-200 py-4"
+      className="border-b border-gray-100 py-5"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
       <button
-        className="flex justify-between items-center w-full text-left"
+        className="flex justify-between items-center w-full text-left hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h3 className="text-lg font-semibold text-gray-800">{question}</h3>
+        <h3 className="text-lg font-medium text-gray-900">{question}</h3>
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
-          className="text-xl text-gray-600"
+          className="text-red-500 text-xl"
         >
           ↓
         </motion.span>
@@ -77,7 +77,7 @@ const FAQItem = ({ question, answer }) => {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <p className="mt-3 text-gray-600 leading-relaxed">{answer}</p>
+            <p className="mt-4 text-gray-600 leading-relaxed px-2">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -208,46 +208,54 @@ const ServiceDetail = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full mx-auto bg-white mt-4 md:mt-20"
+      className="max-w-7xl mx-auto bg-white mt-4 md:mt-20 rounded-2xl shadow-sm"
     >
-      <div className="relative mb-6">
-        <motion.img
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          src={serviceData.imageUrl.mainImageUrl}
-          alt={serviceData.name}
-          className="w-full h-64 md:h-96 object-cover"
-        />
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="absolute bottom-6 right-6 bg-red-500 text-white font-semibold py-2 px-8 rounded shadow-lg hover:bg-red-600 transition duration-300"
-          onClick={handleBooking}
-        >
-          Book Now
-        </motion.button>
-      </div>
-
-      <div className="p-6">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-3xl md:text-4xl font-bold mb-3"
-        >
-          {serviceData.name}
-        </motion.h1>
-
-        <div className="flex flex-wrap gap-3 mb-8">
-          {["about", "Benefits", "package", "gallery", "FAQ"].map((tab) => (
-            <TabButton
-              key={tab}
-              label={tab}
-              isActive={activeTab === tab}
-              onClick={() => setActiveTab(tab)}
-            />
-          ))}
+      <div className="flex flex-col md:px-12  md:py-6 md:flex-row gap-8 relative   ">
+        {/* Left side - Image */}
+        <div className="md:w-[40%] relative">
+          <motion.img
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            src={serviceData.imageUrl.mainImageUrl}
+            alt={serviceData.name}
+            className="w-full h-[300px] md:h-[400px] object-cover rounded-tl-2xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="absolute bottom-8 right-8 bg-red-500 text-white font-medium py-3 px-6 rounded-lg shadow-xl hover:bg-red-600 transition duration-300"
+            onClick={handleBooking}
+          >
+            Book Now
+          </motion.button>
         </div>
 
+        {/* Right side - Tabs */}
+        <div className="md:w-1/2 p-6 bg-gray-50 rounded-tr-2xl">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl font-bold mb-6 text-gray-900"
+          >
+            {serviceData.name}
+          </motion.h1>
+
+          <div className="space-y-2">
+            {["about", "Benefits", "package", "gallery", "FAQ"].map((tab) => (
+              <TabButton
+                key={tab}
+                label={tab}
+                isActive={activeTab === tab}
+                onClick={() => setActiveTab(tab)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Content area below */}
+      <div className="p-6 md:px-4 ">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -255,7 +263,7 @@ const ServiceDetail = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="bg-white px-6"
+            className="bg-white rounded-xl p-6"
           >
             {activeTab === "about" && (
               <div>

@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useServices } from "../hooks/useServices";
 import Loader from "../Components/Common/Loader";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import commonAxios from "../utils/commonAxios";
 import Swal from "sweetalert2";
 
@@ -115,7 +115,7 @@ const ServiceCard = React.memo(({ service }) => {
   return (
     <div className="group bg-white rounded shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out">
       {/* Image section */}
-      <div className="w-full h-48 sm:h-56 relative overflow-hidden rounded-t">
+      <div className="w-full h-48 sm:h-96 relative overflow-hidden rounded-t">
         <img
           src={imageUrl?.mainImageUrl}
           alt={name}
@@ -137,7 +137,7 @@ const ServiceCard = React.memo(({ service }) => {
       <div className="p-4 space-y-3">
         <div className="space-y-1">
           <h3 className="text-lg font-bold text-gray-800 group-hover:text-red-600 transition-colors duration-300 line-clamp-1">
-            {name}
+           <Link to={serviceUrl}>{name}</Link>
           </h3>
           <p className="text-sm text-gray-600 flex items-center gap-1">
             <svg
@@ -221,7 +221,7 @@ const ServicePage = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 mt-28">
           <div className="flex justify-end">
             <input
               type="text"
@@ -237,7 +237,7 @@ const ServicePage = () => {
             </h2>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredServices.map((service) => (
+            {filteredServices.map((service) => ( 
               <ServiceCard key={service._id} service={service} />
             ))}
           </div>

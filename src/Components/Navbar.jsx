@@ -30,7 +30,7 @@ function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [membershipStatus, setMembershipStatus] = useState({
     name: "No Plans Available",
-    status: false
+    status: false,
   });
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -50,12 +50,11 @@ function Navbar() {
         const firstName = parsedDetails.basicDetials.firstName || "";
         const lastName = parsedDetails.basicDetials.lastName || "";
         const fullName = `${firstName} ${lastName}`.trim();
-        const userGender = parsedDetails.basicDetials.gender || "male"; 
+        const userGender = parsedDetails.basicDetials.gender || "male";
 
         setIsLoggedIn(true);
         setUsername(fullName || "User");
         setGender(userGender.toLowerCase());
-        
       } catch (error) {
         console.error("Error parsing customer details:", error);
         setUsername("User");
@@ -63,27 +62,29 @@ function Navbar() {
     }
   }, []);
 
-  useEffect(() => { 
-     commonAxios.get('/validatePlan').then(res => { 
-      if(res?.data?.data?.recurringProduct?.product?.name){
+  useEffect(() => {
+    commonAxios
+      .get("/validatePlan")
+      .then((res) => {
+        if (res?.data?.data?.recurringProduct?.product?.name) {
+          setMembershipStatus({
+            name: res?.data?.data?.recurringProduct?.product?.name,
+            status: true,
+          });
+        } else {
+          setMembershipStatus({
+            name: "Free Plan",
+            status: false,
+          });
+        }
+      })
+      .catch((err) => {
         setMembershipStatus({
-          name: res?.data?.data?.recurringProduct?.product?.name,
-          status: true
+          name: "No Available Plan",
+          status: false,
         });
-      }else{
-        setMembershipStatus({
-          name: "Free Plan",
-          status: false
-        });
-      } 
-    })
-    .catch(err => {
-      setMembershipStatus({
-        name: "No Available Plan",
-        status: false
+        console.log(err, "err");
       });
-      console.log(err, "err");
-    })
   }, []);
 
   useEffect(() => {
@@ -147,19 +148,20 @@ function Navbar() {
     { path: "/", label: "HOME" },
     { path: "/services", label: "SERVICES" },
     { path: "/packages", label: "MEMBERSHIP" },
-    { path:"/Wallet", label:"WALLET"}
+    { path: "/Wallet", label: "WALLET" },
   ];
 
   const getPageName = (pathname) => {
     // Remove leading slash and convert to title case
     const path = pathname.substring(1);
-    if (!path) return 'Home';
-    
+    if (!path) return "Home";
+
     // Handle paths with dashes and convert to spaces
     return path
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ').split('/')[0]
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
+      .split("/")[0];
   };
 
   return (
@@ -179,30 +181,29 @@ function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             <nav className="flex space-x-8">
               {navLinks.map(({ path, label }) => {
-                if(path === "/Wallet"){
-                  return ( 
+                if (path === "/Wallet") {
+                  return (
                     <NavLink
-                        key={path}
-                        to={"/profile?wallet=true"}
-                        active={activeLink === path}
-                        onClick={() => setActiveLink(path)}
-                      >
-                        {label}
-                      </NavLink>
-                    )
-                }else{
-                  return ( 
+                      key={path}
+                      to={"/profile?wallet=true"}
+                      active={activeLink === path}
+                      onClick={() => setActiveLink(path)}
+                    >
+                      {label}
+                    </NavLink>
+                  );
+                } else {
+                  return (
                     <NavLink
-                        key={path}
-                        to={path}
-                        active={activeLink === path}
-                        onClick={() => setActiveLink(path)}
-                      >
-                        {label}
-                      </NavLink>
-                    )
+                      key={path}
+                      to={path}
+                      active={activeLink === path}
+                      onClick={() => setActiveLink(path)}
+                    >
+                      {label}
+                    </NavLink>
+                  );
                 }
-                
               })}
             </nav>
           </div>
@@ -275,7 +276,7 @@ function Navbar() {
                         My Profile
                       </Link>
                       <Link
-                        to="/settings"
+                        to="#"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                       >
                         <svg
@@ -381,16 +382,27 @@ function Navbar() {
         </div>
       )}
 
-      {location.pathname !== '/' && (
+      {location.pathname !== "/" && (
         <div className="w-full bg-white shadow-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="h-10 flex items-center">
-              <button 
+              <button
                 onClick={() => navigate(-1)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 19.5L8.25 12l7.5-7.5"
+                  />
                 </svg>
               </button>
               <h1 className="text-lg font-semibold ml-2">
@@ -408,23 +420,45 @@ function Navbar() {
         } overflow-hidden bg-white `}
       >
         <nav className="px-4 pt-2 pb-4 space-y-2">
-          {navLinks.map(({ path, label }) => (
-            <Link
-              key={path}
-              to={path}
-              onClick={() => {
-                setActiveLink(path);
-                setIsMobileMenuOpen(false);
-              }}
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
-                activeLink === path
-                  ? "text-red-600 bg-red-50"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
+          {navLinks.map(({ path, label }) => {
+            if (path === "/Wallet") {
+              return (
+                <Link
+                  key={path}
+                  to={"/profile?wallet=true"}
+                  onClick={() => {
+                    setActiveLink(path);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    activeLink === path
+                      ? "text-red-600 bg-red-50"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            } else {
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  onClick={() => {
+                    setActiveLink(path);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    activeLink === path
+                      ? "text-red-600 bg-red-50"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            }
+          })}
         </nav>
       </div>
     </header>

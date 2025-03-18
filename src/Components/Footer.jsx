@@ -43,16 +43,20 @@ const Footer = () => {
           <h3 className="text-red-600 font-semibold mb-4">Download</h3>
           <p className="text-gray-600 mb-4">Your Health at Your Fingertips: Download Our App</p>
           <div className="flex space-x-4">
-            <img
-              src={Playstore}
-              alt="Download on the App Store"
-              className="h-10"
-            />
+            <a href="https://play.google.com/store/apps/details?id=com.beyaoshy.rdwellness" target="_blank" rel="noopener noreferrer">
+              <img
+                src={Playstore}
+                alt="Download on the App Store"
+                className="h-10"
+              />
+            </a>
+            <a href="https://apps.apple.com/in/app/rd-wellness/id6742678800" target="_blank" rel="noopener noreferrer">
             <img
               src={Appstore}
               alt="Get it on Google Play"
               className="h-10"
             />
+            </a>
           </div>
         </div>
       </div>
@@ -60,7 +64,7 @@ const Footer = () => {
       <div className="border-t border-gray-200 mt-6 py-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-600 text-sm text-center md:text-left">
-            Copyright ©2024 REAL DEAL WELLNESS. All Rights Reserved. 
+            Copyright ©{new Date().getFullYear()} REAL DEAL WELLNESS. All Rights Reserved. 
             {/* Designed and Developed by IDEOTEK INNOVATIONS */}
           </p>
           <div className="flex space-x-4 text-gray-600 text-sm mt-4 md:mt-0">

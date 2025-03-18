@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
 import {useServices} from "../../hooks/useServices"; 
 
 const ServicesSection = () => {
   const { services } = useServices();
   return (
-    <div className="py-12">
+    <div className="py-12 mt-28">
       <div className="text-center mb-12">
         <h3 className="text-red-500 text-sm font-semibold uppercase">
           Our Services
@@ -20,9 +21,10 @@ const ServicesSection = () => {
       ) : (
         <div className="flex flex-wrap gap-6 mx-auto px-4 justify-center items-stretch">
           {services.map((service, index) => (
-            <div 
-              key={service._id || index}
-              className={`flex flex-col items-center text-center p-6 rounded w-[25rem] transition-all duration-300 
+            <Link to={`/services/${service._id}`} key={service._id || index}>
+               <div 
+                key={service._id || index}
+                className={`flex flex-col items-center text-center p-6 rounded w-[25rem] transition-all duration-300 
                 bg-white text-gray-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 
                 hover:text-white shadow-md hover:shadow-lg`}
             >
@@ -41,6 +43,7 @@ const ServicesSection = () => {
                 {service.shortDescription || service.description}
               </p>
             </div>
+            </Link>
           ))}
         </div>
       )}

@@ -226,21 +226,36 @@ const BookingHistoryPage = () => {
   };
 
   const filteredBookings = useMemo(() => {
-    return bookingHistory.filter((booking) => {
-      const today = new Date();
-      const bookingDate = new Date(booking.date);
-
-      switch (activeFilter) {
-        case "upcoming":
-          return bookingDate >= today && booking.status !== "Cancelled";
-        case "past":
-          return bookingDate < today && booking.status !== "Cancelled";
-        case "cancelled":
-          return booking.status === "Cancelled";
-        default:
-          return true;
+    const sortByDateTime = (a, b) => {
+      const dateA = new Date(`${a.date} ${a.time}`);
+      const dateB = new Date(`${b.date} ${b.time}`);
+      
+      if (activeFilter === "upcoming" || activeFilter === "cancelled") {
+        // Sort ascending (earlier dates first) for upcoming and cancelled
+        return dateA - dateB;
+      } else {
+        // Sort descending (recent dates first) for past bookings
+        return dateB - dateA;
       }
-    });
+    };
+
+    return bookingHistory
+      .filter((booking) => {
+        const today = new Date();
+        const bookingDate = new Date(booking.date);
+
+        switch (activeFilter) {
+          case "upcoming":
+            return bookingDate >= today && booking.status !== "Cancelled";
+          case "past":
+            return bookingDate < today && booking.status !== "Cancelled";
+          case "cancelled":
+            return booking.status === "Cancelled";
+          default:
+            return true;
+        }
+      })
+      .sort(sortByDateTime);
   }, [bookingHistory, activeFilter]);
 
   const { currentBookings, totalPages } = useMemo(() => {
