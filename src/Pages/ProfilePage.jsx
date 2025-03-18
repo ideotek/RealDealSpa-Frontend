@@ -145,7 +145,7 @@ const ProfilePage = () => {
                   <div className="w-10 h-10 bg-red-50 rounded flex items-center justify-center text-xl mb-2">
                     💳
                   </div>
-                  <span>Wallet (${walletData.balance})</span>
+                  <span>Wallet ({walletData.balance} pts)</span>
                 </button>
                 <button 
                   className="flex flex-col items-center p-4 bg-gray-50 rounded text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -356,7 +356,7 @@ const ProfilePage = () => {
                 {/* Booking History */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 uppercase">
-                    Upcoming Bookings
+                  Future Bookings
                   </h3>
                   {bookingHistory.length > 0 ? (
                     <>

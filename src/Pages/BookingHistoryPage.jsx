@@ -44,7 +44,7 @@ const ViewModeToggle = ({ viewMode, onToggle }) => (
 
 const FilterTabs = ({ activeFilter, onFilterChange }) => (
   <div className="flex overflow-x-auto space-x-4 mb-6 border-b scrollbar-hide">
-    {["upcoming", "past", "cancelled"].map((filter) => (
+    {["future", "past", "cancelled"].map((filter) => (
       <button
         key={filter}
         onClick={() => onFilterChange(filter)}
