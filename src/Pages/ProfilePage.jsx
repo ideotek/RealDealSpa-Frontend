@@ -71,7 +71,8 @@ const ProfilePage = () => {
         setWalletData({
           balance: response.data.data.wallet.walletBalance,
           transactions: response.data.data.wallet.transactions,
-          referralCode: response.data.data.referralInfo.referralCode
+          referralCode: response.data.data.referralInfo.referralCode,
+          activePlans: response.data.data.membership.transactions || []
         });
       } catch (error) {
         console.error("Error fetching wallet data:", error);
