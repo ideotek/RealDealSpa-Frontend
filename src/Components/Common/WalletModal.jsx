@@ -24,6 +24,7 @@ const calculateExpiryDate = (startDate, duration, durationType) => {
 
 const WalletModal = ({ isOpen, onClose, walletData, onRedeemSuccess }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedPlan, setSelectedPlan] = React.useState(null);
   const transactionsPerPage = 3;
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,21 +55,43 @@ const WalletModal = ({ isOpen, onClose, walletData, onRedeemSuccess }) => {
     return false;
   });
 
+  // Add this new function to generate available plans based on points
+  const getAvailablePlans = (points) => {
+    const plans = [];
+    const pointsPer30Days = 1000;
+    const maxPlans = Math.floor(points / pointsPer30Days);
+    
+    for (let i = 1; i <= maxPlans; i++) {
+      plans.push({
+        label: `${i * 30} Days Free`,
+        value: `FREE_PLAN_${i * pointsPer30Days}`,
+        points: i * pointsPer30Days
+      });
+    }
+    return plans;
+  };
+
+  // Modify handleRedeemCoupon to use selected plan
   const handleRedeemCoupon = async () => {
+    if (!selectedPlan) {
+      toast.error("Please select a plan");
+      return;
+    }
+
     if (hasActivePlan) {
       toast.error("You already have an active unlimited booking pass");
       return;
     }
 
-    if (walletData.balance < 1000) {
-      toast.error("Need 1000 Points");
+    if (walletData.balance < selectedPlan.points) {
+      toast.error(`Need ${selectedPlan.points} Points`);
       return;
     }
 
     setIsRedeeming(true);
     try {
       const response = await commonAxios.post('/redeem-coupon', {
-        planID: "FREE_PLAN_ID"
+        planID: selectedPlan.value
       });
 
       if (response.data) {
@@ -140,7 +163,8 @@ const WalletModal = ({ isOpen, onClose, walletData, onRedeemSuccess }) => {
                     key={plan._id} 
                     className="bg-gray-50 p-2.5 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
                   >
-                    <div className="flex justify-between items-center">
+                   
+                    <div className="flex justify-between items-center"> 
                       <div>
                         <div className="text-xs font-medium">
                           {plan.planName}
@@ -185,20 +209,47 @@ const WalletModal = ({ isOpen, onClose, walletData, onRedeemSuccess }) => {
 
         {/* Points and Redeem Section */}
         <div className="grid grid-cols-2 gap-2 p-2.5">
-          <div className="bg-gray-50 p-2.5 rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
-            <div className="text-gray-600 text-xs font-medium">Available Points</div>
+          <div className="bg-gray-50 p-2.5 rounded-lg shadow-sm hover:bg-gray-100 transition-colors flex flex-col justify-center">
+            <div className="text-gray-600  text-sm font-medium">Available Points</div>
             <div className="text-lg font-bold text-red-500">
               {Math.round(walletData.balance)} <span className="text-[10px]">Points</span>
             </div>
+            <p className="text-[0.6rem] text-gray-400">Redeem available at 1,000+ points. T&Cs apply.</p>
           </div>
           <div className="bg-gray-50 p-2.5 rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
-            <div className="text-xs font-semibold">Unlimited Booking Pass</div>
-            <div className="text-[10px] text-gray-600 mb-1.5">1000 Points - 1 month</div>
+            <div className="text-xs font-semibold py-2">Redeem Your Points</div>
+            <div className="relative">
+              <select
+                disabled={walletData.balance < 1000}
+                value={selectedPlan?.value || ''}
+                onChange={(e) => {
+                  const plan = getAvailablePlans(walletData.balance)
+                    .find(p => p.value === e.target.value);
+                  setSelectedPlan(plan);
+                }}
+                className="w-full mb-2 text-xs p-2 pr-8 rounded-lg border border-gray-300 
+                          bg-white shadow-sm appearance-none
+                          focus:outline-none focus:ring-2 focus:ring-red-500/20 
+                          focus:border-red-500 transition-all duration-200"
+              >
+                <option value="">{walletData.balance < 1000 ? "Insufficient Points" : "Select a plan" }</option>
+                {getAvailablePlans(walletData.balance).map((plan) => (
+                  <option key={plan.value} value={plan.value}>
+                    {plan.label} - {plan.points} Points
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none mb-2">
+                <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
             <button
               onClick={handleRedeemCoupon}
-              disabled={walletData.balance < 1000 || isRedeeming || hasActivePlan}
+              disabled={!selectedPlan || walletData.balance < (selectedPlan?.points || 0) || isRedeeming || hasActivePlan}
               className={`px-2 py-1 rounded w-full transition-all duration-200 text-xs ${
-                walletData.balance >= 1000 && !isRedeeming && !hasActivePlan
+                selectedPlan && walletData.balance >= selectedPlan.points && !isRedeeming && !hasActivePlan
                   ? "bg-red-500 hover:bg-red-600 text-white shadow-sm"
                   : "bg-gray-200 text-gray-500 cursor-not-allowed"
               }`}
@@ -274,7 +325,7 @@ const WalletModal = ({ isOpen, onClose, walletData, onRedeemSuccess }) => {
           <button
             onClick={() => {
               const referralLink = `https://book.realdealwellness.net/signup?ref=${
-                walletData.referralCode || "G3PSR2"
+                walletData.referralCode
               }`;
               navigator.clipboard
                 .writeText(referralLink)

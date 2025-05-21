@@ -6,6 +6,7 @@ import FemaleAvatar from "../assets/svg/FemaleAvatar.svg";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef, memo } from "react";
 import commonAxios from "../utils/commonAxios";
+import { toast } from 'react-toastify';
 
 const NavLink = memo(({ to, active, onClick, children }) => (
   <Link
@@ -28,6 +29,7 @@ function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [refCode,setRefCode] = useState('')
   const [membershipStatus, setMembershipStatus] = useState({
     name: "No Plans Available",
     status: false,
@@ -51,6 +53,10 @@ function Navbar() {
         const lastName = parsedDetails.basicDetials.lastName || "";
         const fullName = `${firstName} ${lastName}`.trim();
         const userGender = parsedDetails.basicDetials.gender || "male";
+
+        const referralCode = parsedDetails.referralInfo.referralCode
+
+        setRefCode(referralCode)
 
         setIsLoggedIn(true);
         setUsername(fullName || "User");
@@ -149,6 +155,7 @@ function Navbar() {
     { path: "/services", label: "SERVICES" },
     { path: "/packages", label: "MEMBERSHIP" },
     { path: "/Wallet", label: "WALLET" },
+    { path: "/booking-history", label: "BOOKING HISTORY" },
   ];
 
   const getPageName = (pathname) => {
@@ -276,8 +283,15 @@ function Navbar() {
                         My Profile
                       </Link>
                       <Link
-                        to="#"
+                        to="#" 
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                        onClick={() => {
+                          const referralLink = `https://book.realdealwellness.net/signup?ref=${refCode}`;
+                          navigator.clipboard
+                            .writeText(referralLink)
+                            .then(() => toast.success("Link copied!"))
+                            .catch(() => toast.error("Copy failed"));
+                        }}
                       >
                         <svg
                           className="w-4 h-4 mr-3"
@@ -298,7 +312,7 @@ function Navbar() {
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        Settings
+                        Invite Friend
                       </Link>
                       <hr className="my-1 border-gray-200" />
                       <button

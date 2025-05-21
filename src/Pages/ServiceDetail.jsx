@@ -242,7 +242,7 @@ const ServiceDetail = () => {
           </motion.h1>
 
           <div className="space-y-2">
-            {["about", "Benefits", "package", "gallery", "FAQ"].map((tab) => (
+            {["About", "Benefits", "Package", "Gallery", "FAQ"].map((tab) => (
               <TabButton
                 key={tab}
                 label={tab}
@@ -265,7 +265,7 @@ const ServiceDetail = () => {
             transition={{ duration: 0.2 }}
             className="bg-white rounded-xl p-6"
           >
-            {activeTab === "about" && (
+            {activeTab === "About" && (
               <div>
                 <div className="prose max-w-none space-y-4">
                   {serviceData.description.split('\n').map((paragraph, index) => (
@@ -289,7 +289,7 @@ const ServiceDetail = () => {
                 </div>
               </div>
             )}
-            {activeTab === "package" && (
+            {activeTab === "Package" && (
               <div>
                 {serviceData.packages?.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -306,7 +306,7 @@ const ServiceDetail = () => {
                 )}
               </div>
             )}
-            {activeTab === "gallery" && (
+            {activeTab === "Gallery" && (
               <ImageGallery 
                 images={serviceData.imageUrl.otherImageUrls?.sort((a, b) => 
                   a.name.localeCompare(b.name)

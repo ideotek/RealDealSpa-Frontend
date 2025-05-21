@@ -119,10 +119,10 @@ const ServiceCard = React.memo(({ service }) => {
         <img
           src={imageUrl?.mainImageUrl}
           alt={name}
-          className="w-full h-full object-cover object-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover object-center bg-no-repeat transform   transition-transform duration-500"
           loading="lazy"
         />
-        <div className="absolute bottom-3 right-3 bg-red-500 p-2 rounded-full cursor-pointer hover:bg-red-600 transform hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl z-10">
+        <div className="absolute bottom-6 right-6  bg-red-500 p-2 rounded-full cursor-pointer hover:bg-red-600 transform scale-150 hover:scale-[2] transition-all duration-300 shadow-lg hover:shadow-xl z-10">
           {isBookingLoading ? (
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
