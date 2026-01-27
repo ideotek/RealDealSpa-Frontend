@@ -90,7 +90,7 @@ const ServiceDetail = () => {
   const [serviceData, setServiceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("about"); // State to manage active tab
+  const [activeTab, setActiveTab] = useState("About"); // State to manage active tab
   const navigate = useNavigate();
 
   useEffect(() => {

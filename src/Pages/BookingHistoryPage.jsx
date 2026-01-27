@@ -48,11 +48,10 @@ const FilterTabs = ({ activeFilter, onFilterChange }) => (
       <button
         key={filter}
         onClick={() => onFilterChange(filter)}
-        className={`pb-2 px-4 text-xs sm:text-sm font-medium capitalize whitespace-nowrap transition-colors ${
-          activeFilter === filter
-            ? "border-b-2 border-red-500 text-red-600"
-            : "text-gray-500 hover:text-gray-700"
-        }`}
+        className={`pb-2 px-4 text-xs sm:text-sm font-medium capitalize whitespace-nowrap transition-colors ${activeFilter === filter
+          ? "border-b-2 border-red-500 text-red-600"
+          : "text-gray-500 hover:text-gray-700"
+          }`}
       >
         {filter}
       </button>
@@ -62,11 +61,10 @@ const FilterTabs = ({ activeFilter, onFilterChange }) => (
 
 const BookingCard = React.memo(({ booking, viewMode }) => (
   <div
-    className={` ${
-      viewMode === "grid"
-        ? "p-3 bg-white hover:shadow-lg rounded-lg border border-gray-200"
-        : "p-3 bg-white hover:shadow-lg rounded-lg border border-gray-200"
-    } transition-all duration-300 max-h-36`}
+    className={` ${viewMode === "grid"
+      ? "p-3 bg-white hover:shadow-lg rounded-lg border border-gray-200"
+      : "p-3 bg-white hover:shadow-lg rounded-lg border border-gray-200"
+      } transition-all duration-300 max-h-36`}
   >
     <div
       className={
@@ -79,20 +77,20 @@ const BookingCard = React.memo(({ booking, viewMode }) => (
         <h4 className="font-medium text-sm sm:text-base text-gray-800 truncate">
           {booking.serviceName}
         </h4>
-        
+
         <div className="flex items-center gap-3 mt-1.5 text-xs sm:text-sm text-gray-600">
           <div className="flex items-center gap-1.5">
             <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" 
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
               />
             </svg>
             <span>{booking.date}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" 
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
             <span>{booking.time}</span>
@@ -101,21 +99,19 @@ const BookingCard = React.memo(({ booking, viewMode }) => (
 
         <div className={`mt-2 ${viewMode === "grid" ? "" : "ml-3"} flex items-center gap-2`}>
           <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-              booking.status === "Confirmed"
-                ? "bg-green-100 text-green-800"
-                : booking.status === "Pending"
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${booking.status === "Confirmed"
+              ? "bg-green-100 text-green-800"
+              : booking.status === "Pending"
                 ? "bg-yellow-100 text-yellow-800"
                 : "bg-red-100 text-red-800"
-            }`}
+              }`}
           >
-            <span className={`w-1 h-1 rounded-full mr-1 ${
-              booking.status === "Confirmed"
-                ? "bg-green-600"
-                : booking.status === "Pending"
+            <span className={`w-1 h-1 rounded-full mr-1 ${booking.status === "Confirmed"
+              ? "bg-green-600"
+              : booking.status === "Pending"
                 ? "bg-yellow-600"
                 : "bg-red-600"
-            }`}></span>
+              }`}></span>
             {booking.status}
           </span>
 
@@ -150,76 +146,65 @@ const BookingCard = React.memo(({ booking, viewMode }) => (
 BookingCard.displayName = 'BookingCard';
 
 const BookingHistoryPage = () => {
-  const [bookingHistory, setBookingHistory] = useState([]);
+  const [bookingHistory, setBookingHistory] = useState({
+    future: [],
+    past: [],
+    cancelled: [],
+  });
   const [loading, setLoading] = useState(true);
+  const [loadedFilters, setLoadedFilters] = useState(new Set());
   const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
-  const [activeFilter, setActiveFilter] = useState("upcoming"); // Add this new state
-  const [currentPage, setCurrentPage] = useState(1); // Add this new state
+  const [activeFilter, setActiveFilter] = useState("future");
+  const [currentPage, setCurrentPage] = useState(1);
   const bookingsPerPage = 12;
 
   useEffect(() => {
     const fetchBookingHistory = async () => {
+      // Don't fetch if already loaded
+      if (loadedFilters.has(activeFilter)) return;
+
+      setLoading(true);
       try {
-        const [futureBookings, pastBookings, cancelledBookings] =
-          await Promise.all([
-            commonAxios.get("/customer/appointments?type=future"),
-            commonAxios.get("/customer/appointments?type=past"),
-            commonAxios.get("/customer/appointments?type=cancelled"),
-          ]);
+        const response = await commonAxios.get(
+          `/customer/appointments?type=${activeFilter}`
+        );
 
-        const combinedBookings = [
-          ...futureBookings.data.data.events.map((booking) => ({
-            id: booking.id,
-            serviceName: booking.title,
-            calendarId: booking.calendarId,
-            date: new Date(booking.startTime).toLocaleDateString(),
-            time: new Date(booking.startTime).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            status:
-              booking.appointmentStatus.charAt(0).toUpperCase() +
-              booking.appointmentStatus.slice(1),
-          })),
-          ...pastBookings.data.data.events.map((booking) => ({
-            id: booking.id,
-            serviceName: booking.title,
-            calendarId: booking.calendarId,
-            date: new Date(booking.startTime).toLocaleDateString(),
-            time: new Date(booking.startTime).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            status:
-              booking.appointmentStatus.charAt(0).toUpperCase() +
-              booking.appointmentStatus.slice(1),
-          })),
-          ...cancelledBookings.data.data.events.map((booking) => ({
-            id: booking.id,
-            serviceName: booking.title,
-            calendarId: booking.calendarId,
-            date: new Date(booking.startTime).toLocaleDateString(),
-            time: new Date(booking.startTime).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            status:
-              booking.appointmentStatus.charAt(0).toUpperCase() +
-              booking.appointmentStatus.slice(1),
-          })),
-        ];
+        const newBookings = response.data.data.events.map((booking) => ({
+          id: booking.id,
+          serviceName: booking.title,
+          calendarId: booking.calendarId,
+          date: new Date(booking.startTime).toLocaleDateString(),
+          time: new Date(booking.startTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          startTime: booking.startTime,
+          type: activeFilter,
+          status:
+            booking.appointmentStatus.charAt(0).toUpperCase() +
+            booking.appointmentStatus.slice(1),
+        }));
 
-        setBookingHistory(combinedBookings);
+        setBookingHistory((prev) => ({
+          ...prev,
+          [activeFilter]: newBookings,
+        }));
+        setLoadedFilters((prev) => new Set(prev).add(activeFilter));
       } catch (error) {
-        console.error("Error fetching booking history:", error);
-        showToast.error("Failed to load booking history.");
+        console.error(`Error fetching ${activeFilter} booking history:`, error);
+        showToast.error(`Failed to load ${activeFilter} booking history.`);
       } finally {
         setLoading(false);
       }
     };
 
     fetchBookingHistory();
-  }, []);
+  }, [activeFilter, loadedFilters]);
+
+  // Reset currentPage when activeFilter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter]);
 
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "grid" ? "list" : "grid"));
@@ -227,35 +212,17 @@ const BookingHistoryPage = () => {
 
   const filteredBookings = useMemo(() => {
     const sortByDateTime = (a, b) => {
-      const dateA = new Date(`${a.date} ${a.time}`);
-      const dateB = new Date(`${b.date} ${b.time}`);
-      
-      if (activeFilter === "upcoming" || activeFilter === "cancelled") {
-        // Sort ascending (earlier dates first) for upcoming and cancelled
+      const dateA = new Date(a.startTime);
+      const dateB = new Date(b.startTime);
+
+      if (activeFilter === "future" || activeFilter === "cancelled") {
         return dateA - dateB;
       } else {
-        // Sort descending (recent dates first) for past bookings
         return dateB - dateA;
       }
     };
 
-    return bookingHistory
-      .filter((booking) => {
-        const today = new Date();
-        const bookingDate = new Date(booking.date);
-
-        switch (activeFilter) {
-          case "upcoming":
-            return bookingDate >= today && booking.status !== "Cancelled";
-          case "past":
-            return bookingDate < today && booking.status !== "Cancelled";
-          case "cancelled":
-            return booking.status === "Cancelled";
-          default:
-            return true;
-        }
-      })
-      .sort(sortByDateTime);
+    return [...(bookingHistory[activeFilter] || [])].sort(sortByDateTime);
   }, [bookingHistory, activeFilter]);
 
   const { currentBookings, totalPages } = useMemo(() => {
@@ -298,11 +265,10 @@ const BookingHistoryPage = () => {
               {filteredBookings.length > 0 ? (
                 <>
                   <div
-                    className={`${
-                      viewMode === "grid"
-                        ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4  "
-                        : "space-y-3"
-                    } overflow-y-auto `}
+                    className={`${viewMode === "grid"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4  "
+                      : "space-y-3"
+                      } overflow-y-auto `}
                   >
                     {currentBookings.map((booking) => (
                       <BookingCard
@@ -321,11 +287,10 @@ const BookingHistoryPage = () => {
                           setCurrentPage((prev) => Math.max(prev - 1, 1))
                         }
                         disabled={currentPage === 1}
-                        className={`px-2 py-1 text-xs sm:text-sm rounded ${
-                          currentPage === 1
-                            ? "bg-gray-50 text-gray-400"
-                            : "bg-red-50 text-red-600 hover:bg-red-100"
-                        }`}
+                        className={`px-2 py-1 text-xs sm:text-sm rounded ${currentPage === 1
+                          ? "bg-gray-50 text-gray-400"
+                          : "bg-red-50 text-red-600 hover:bg-red-100"
+                          }`}
                       >
                         Previous
                       </button>
@@ -339,11 +304,10 @@ const BookingHistoryPage = () => {
                           )
                         }
                         disabled={currentPage === totalPages}
-                        className={`px-2 py-1 text-xs sm:text-sm rounded ${
-                          currentPage === totalPages
-                            ? "bg-gray-50 text-gray-400"
-                            : "bg-red-50 text-red-600 hover:bg-red-100"
-                        }`}
+                        className={`px-2 py-1 text-xs sm:text-sm rounded ${currentPage === totalPages
+                          ? "bg-gray-50 text-gray-400"
+                          : "bg-red-50 text-red-600 hover:bg-red-100"
+                          }`}
                       >
                         Next
                       </button>
