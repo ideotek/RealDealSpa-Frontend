@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import React from 'react';
 // Create axios instance with base configuration
 const commonAxios = axios.create({
-  // baseURL: import.meta.env.VITE_BASEURL,
-  baseURL: '/api/',
+  baseURL: import.meta.env.VITE_BASEURL,
+  // baseURL: '/api/',
   withCredentials: true,
 });
 
