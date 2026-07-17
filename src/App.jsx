@@ -19,6 +19,9 @@ import React from 'react';
 const Navbar = lazy(() => import("./Components/Navbar"));
 const LoginPage = lazy(() => import("./Pages/LoginPage"));
 const SignupPage = lazy(() => import("./Pages/SignupPage"));
+const ForgotPasswordPage = lazy(() => import("./Pages/ForgotPasswordPage"));
+const VerifyOtpPage = lazy(() => import("./Pages/VerifyOtpPage"));
+const ResetPasswordPage = lazy(() => import("./Pages/ResetPasswordPage"));
 const ProfilePage = lazy(() => import("./Pages/ProfilePage"));
 const Home = lazy(() => import("./Pages/Home"));
 const ServicePage = lazy(() => import("./Pages/ServicePage"));
@@ -83,6 +86,9 @@ const App = () => (
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-otp" element={<VerifyOtpPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* Protected routes */}
           <Route

@@ -34,6 +34,37 @@ const PrivacyPolicy = () => {
 
           {/* Add similar sections for other policy content */}
           <section>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Data Retention</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              We retain your personal information for as long as your account is active or as needed to provide our services.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              If you delete your account, we will retain your data for up to 30 days to allow for account recovery or to comply with legal obligations. After this period, your data will be permanently deleted or anonymized unless retention is required by law.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Data Deletion & Your Rights</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              You have the right to access, update, or delete your personal data at any time. You can request deletion in the following ways:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-4">
+              <li>
+                <strong>Account Deletion:</strong> You can delete your account and associated data within the app by navigating to your Profile and selecting "Terminate Account".
+              </li>
+              <li>
+                <strong>Manual Request:</strong> You may request deletion by contacting us at <span className="font-medium text-gray-900">info@m.realdealwellness.net</span>.
+              </li>
+            </ul>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Upon receiving a valid request, we will process and delete your personal data within 7–30 days, unless we are required to retain certain information for legal, security, or regulatory purposes.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              After deletion, your data will either be permanently removed or anonymized so that it can no longer be associated with you.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Contact Us</h2>
             <p className="text-gray-700 leading-relaxed">
               If you have any questions or concerns about this Privacy Policy or our practices, please contact us at:

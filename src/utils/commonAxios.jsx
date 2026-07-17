@@ -33,7 +33,10 @@ export const setLoadingStateHandler = (handler) => {
 commonAxios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("AccessToken");
-    if (token) config.headers["Authorization"] = `Bearer ${token}`;
+    // Prefer an explicit Authorization header (e.g. OTP reset JWT)
+    if (token && !config.headers["Authorization"]) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
     if (loadingStateHandler) loadingStateHandler(true);
     return config;
   },
